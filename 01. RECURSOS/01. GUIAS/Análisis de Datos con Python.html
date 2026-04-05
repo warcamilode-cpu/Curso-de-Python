@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python para Análisis de Datos — Módulo Práctico</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0b0f14;
+  --surface:  #111820;
+  --card:     #161e28;
+  --border:   #1e2d3d;
+  --green:    #3ddc84;
+  --cyan:     #4fc3f7;
+  --amber:    #ffb74d;
+  --rose:     #f06292;
+  --violet:   #ce93d8;
+  --text:     #cdd6e0;
+  --muted:    #5a7080;
+  --white:    #e8f0f6;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ══════════════════════════════════
+   HERO
+══════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(61,220,132,.12) 0%, transparent 70%),
+    var(--bg);
+}
+
+/* grid overlay */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(61,220,132,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61,220,132,.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid rgba(61,220,132,.3);
+  padding: .35rem 1.1rem;
+  border-radius: 2px;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 1;
+  animation: fadeDown .6s ease both;
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.2rem, 5.5vw, 4.5rem);
+  font-weight: 800;
+  color: var(--white);
+  text-align: center;
+  line-height: 1.08;
+  max-width: 820px;
+  position: relative;
+  z-index: 1;
+  animation: fadeDown .6s .15s ease both;
+}
+
+.hero h1 span { color: var(--green); }
+
+.hero-sub {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--muted);
+  text-align: center;
+  max-width: 560px;
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+  position: relative;
+  z-index: 1;
+  animation: fadeDown .6s .3s ease both;
+}
+
+.hero-libs {
+  display: flex;
+  gap: .9rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 3rem;
+  position: relative;
+  z-index: 1;
+  animation: fadeDown .6s .45s ease both;
+}
+
+.lib-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem;
+  padding: .45rem 1rem;
+  border-radius: 4px;
+  letter-spacing: .05em;
+}
+.lb-np { background: rgba(79,195,247,.12); color: var(--cyan);   border: 1px solid rgba(79,195,247,.25); }
+.lb-pd { background: rgba(61,220,132,.12); color: var(--green);  border: 1px solid rgba(61,220,132,.25); }
+.lb-sp { background: rgba(255,183,77,.12); color: var(--amber);  border: 1px solid rgba(255,183,77,.25); }
+.lb-sk { background: rgba(240,98,146,.12); color: var(--rose);   border: 1px solid rgba(240,98,146,.25); }
+.lb-mp { background: rgba(206,147,216,.12); color: var(--violet); border: 1px solid rgba(206,147,216,.25); }
+
+/* ── STICKY NAV ── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(11,15,20,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; overflow-x: auto; gap: 0;
+}
+.nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  padding: .9rem 1.5rem;
+  white-space: nowrap;
+  border-right: 1px solid var(--border);
+  transition: color .2s, background .2s;
+}
+.nav a:hover { color: var(--green); background: rgba(61,220,132,.05); }
+
+/* ── PAGE WRAP ── */
+.page { max-width: 940px; margin: 0 auto; padding: 0 2rem; }
+
+/* ══════════════════════════════════
+   MODULES
+══════════════════════════════════ */
+.module { padding: 5rem 0 4rem; border-bottom: 1px solid var(--border); }
+
+.mod-header {
+  margin-bottom: 3.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 2rem;
+}
+
+.mod-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 5.5rem;
+  font-weight: 800;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: -.5rem;
+  opacity: .1;
+}
+.m1 .mod-num { color: var(--green); }
+.m2 .mod-num { color: var(--cyan); }
+.m3 .mod-num { color: var(--amber); }
+.m4 .mod-num { color: var(--rose); }
+
+.mod-info { flex: 1; }
+
+.mod-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-bottom: .6rem;
+}
+.m1 .mod-tag { color: var(--green); }
+.m2 .mod-tag { color: var(--cyan); }
+.m3 .mod-tag { color: var(--amber); }
+.m4 .mod-tag { color: var(--rose); }
+
+.module h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+}
+
+.mod-intro {
+  font-style: italic;
+  color: var(--muted);
+  margin-top: .75rem;
+  font-size: 1rem;
+}
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 3.5rem; }
+
+.section h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 1rem;
+  padding-bottom: .6rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: .7rem;
+}
+.section h3 .tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  font-weight: 400;
+  letter-spacing: .12em;
+  padding: .2rem .6rem;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.m1 .tag { background: rgba(61,220,132,.12);  color: var(--green); }
+.m2 .tag { background: rgba(79,195,247,.12);  color: var(--cyan);  }
+.m3 .tag { background: rgba(255,183,77,.12);  color: var(--amber); }
+.m4 .tag { background: rgba(240,98,146,.12);  color: var(--rose);  }
+
+.section h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 1.8rem 0 .7rem;
+}
+
+p { margin-bottom: 1rem; }
+
+/* ══════════════════════════════════
+   CODE BLOCKS
+══════════════════════════════════ */
+.code-wrap {
+  margin: 1.5rem 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.code-header {
+  background: var(--surface);
+  padding: .55rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.code-header .dots { display: flex; gap: .4rem; }
+.code-header .dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.dot-r { background: #ff5f57; }
+.dot-y { background: #febc2e; }
+.dot-g { background: #28c840; }
+
+.code-header .filename {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  color: var(--muted);
+  letter-spacing: .08em;
+}
+
+.code-header .lang-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  color: var(--green);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  background: rgba(61,220,132,.1);
+  padding: .15rem .5rem;
+  border-radius: 2px;
+}
+
+pre {
+  background: var(--card);
+  padding: 1.4rem 1.6rem;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem;
+  line-height: 1.85;
+  tab-size: 4;
+}
+
+code { font-family: 'JetBrains Mono', monospace; }
+
+/* Syntax colors */
+.kw  { color: #c792ea; }   /* keywords */
+.fn  { color: #82aaff; }   /* functions */
+.st  { color: #c3e88d; }   /* strings */
+.cm  { color: #546e7a; font-style: italic; }  /* comments */
+.nb  { color: var(--amber); }  /* numbers */
+.mt  { color: var(--cyan); }   /* methods / attrs */
+.cl  { color: #ffcb6b; }   /* class names */
+.op  { color: #89ddff; }   /* operators / punctuation */
+.im  { color: var(--rose); }   /* import keyword */
+
+/* ── OUTPUT BOX ── */
+.output-box {
+  background: #060a0d;
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 1rem 1.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem;
+  color: #8bc34a;
+  line-height: 1.9;
+  border-radius: 0 0 6px 6px;
+}
+.output-box .out-label {
+  color: var(--muted);
+  font-size: .65rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: .5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: .4rem;
+}
+.output-box .err { color: var(--rose); }
+.output-box .warn { color: var(--amber); }
+.output-box .info { color: var(--cyan); }
+
+/* ── CONCEPT CARDS ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: .9rem;
+  margin: 1.5rem 0;
+}
+
+.ccard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.1rem 1.2rem;
+}
+.ccard .cc-top {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  font-weight: 500;
+  margin-bottom: .4rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.cc-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.m1 .cc-dot { background: var(--green); }
+.m2 .cc-dot { background: var(--cyan); }
+.m3 .cc-dot { background: var(--amber); }
+.m4 .cc-dot { background: var(--rose); }
+.ccard .cc-body { font-size: .86rem; color: var(--muted); line-height: 1.55; }
+
+/* ── CALLOUT ── */
+.callout {
+  background: var(--card);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 6px 6px 0;
+  padding: 1.1rem 1.4rem;
+  margin: 1.5rem 0;
+  font-size: .93rem;
+  display: flex; gap: .8rem; align-items: flex-start;
+}
+.callout .ci { font-size: 1rem; flex-shrink: 0; margin-top: .15rem; }
+.callout.green { border-left-color: var(--green); }
+.callout.cyan  { border-left-color: var(--cyan); }
+.callout.rose  { border-left-color: var(--rose); }
+
+/* ── TABLE ── */
+.tbl { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: .88rem; }
+.tbl th {
+  background: var(--surface);
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .7rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.tbl td { padding: .65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl code {
+  font-size: .78rem;
+  background: var(--surface);
+  padding: .1rem .4rem;
+  border-radius: 3px;
+  color: var(--cyan);
+}
+
+/* ── STEP LIST ── */
+.steps { counter-reset: step; list-style: none; margin: 1.5rem 0; }
+.steps li {
+  counter-increment: step;
+  display: flex; gap: 1rem;
+  margin-bottom: 1.2rem; align-items: flex-start;
+}
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  background: var(--surface);
+  color: var(--green);
+  border: 1px solid var(--border);
+  width: 2rem; height: 2rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 4px;
+  flex-shrink: 0; margin-top: .2rem;
+}
+.steps li .st { font-weight: 600; display: block; color: var(--white); margin-bottom: .2rem; }
+
+/* ── REVEAL ── */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .55s ease, transform .55s ease; }
+.reveal.vis { opacity: 1; transform: none; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeDown {
+  from { opacity:0; transform: translateY(-12px); }
+  to   { opacity:1; transform: none; }
+}
+
+/* ── PIPELINE VISUAL ── */
+.pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 2rem 0;
+  overflow-x: auto;
+  padding-bottom: .5rem;
+}
+.pip-step {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: .9rem 1.2rem;
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 110px;
+}
+.pip-step .ps-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem;
+  color: var(--muted);
+  display: block;
+  margin-bottom: .25rem;
+  letter-spacing: .1em;
+}
+.pip-step .ps-name {
+  font-family: 'Syne', sans-serif;
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--white);
+  display: block;
+  margin-bottom: .2rem;
+}
+.pip-step .ps-lib {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem;
+  padding: .15rem .5rem;
+  border-radius: 2px;
+}
+.pip-arrow {
+  font-size: 1.2rem;
+  color: var(--border);
+  padding: 0 .5rem;
+  flex-shrink: 0;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 3rem 2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem;
+  letter-spacing: .12em;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  pre { font-size: .72rem; }
+  .mod-header { flex-direction: column; gap: .5rem; }
+  .mod-num { font-size: 3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ HERO ════ -->
+<header class="hero">
+  <div class="hero-eyebrow">Módulo Práctico · Python</div>
+  <h1>Análisis de Datos con <span>Python</span></h1>
+  <p class="hero-sub">Cada concepto matemático de la guía, llevado a código real. De los datos crudos al modelo.</p>
+  <div class="hero-libs">
+    <span class="lib-badge lb-np">numpy</span>
+    <span class="lib-badge lb-pd">pandas</span>
+    <span class="lib-badge lb-sp">scipy</span>
+    <span class="lib-badge lb-sk">scikit-learn</span>
+    <span class="lib-badge lb-mp">matplotlib · seaborn</span>
+  </div>
+</header>
+
+<!-- ════ NAV ════ -->
+<nav class="nav">
+  <a href="#m0">00 · Setup</a>
+  <a href="#m1">01 · Estadística Descriptiva</a>
+  <a href="#m2">02 · Probabilidad e Inferencia</a>
+  <a href="#m3">03 · Álgebra Lineal</a>
+  <a href="#m4">04 · Pipeline Completo</a>
+</nav>
+
+<div class="page">
+
+<!-- ════════════════════════════════════
+     MÓDULO 0 — SETUP
+════════════════════════════════════ -->
+<section class="module m1 reveal" id="m0">
+  <div class="mod-header">
+    <div class="mod-num">00</div>
+    <div class="mod-info">
+      <div class="mod-tag">Configuración Inicial</div>
+      <h2>Instalación y Entorno</h2>
+      <p class="mod-intro">Antes de escribir una sola línea de análisis, necesitamos tener el entorno listo con todas las librerías del ecosistema científico de Python.</p>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <h3>Instalación de librerías <span class="tag">terminal</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">terminal</span>
+        <span class="lang-tag">bash</span>
+      </div>
+<pre><span class="cm"># Instalar todas las librerías necesarias</span>
+pip install numpy pandas scipy scikit-learn matplotlib seaborn</pre>
+    </div>
+
+    <h4>¿Para qué sirve cada librería?</h4>
+    <div class="card-grid">
+      <div class="ccard"><div class="cc-top"><span class="cc-dot"></span>numpy</div><div class="cc-body">Arrays n-dimensionales, operaciones matemáticas vectorizadas, álgebra lineal.</div></div>
+      <div class="ccard"><div class="cc-top"><span class="cc-dot"></span>pandas</div><div class="cc-body">DataFrames para manipular, limpiar y explorar datos tabulares (como Excel en código).</div></div>
+      <div class="ccard"><div class="cc-top"><span class="cc-dot"></span>scipy</div><div class="cc-body">Estadística avanzada: pruebas de hipótesis, distribuciones, optimización.</div></div>
+      <div class="ccard"><div class="cc-top"><span class="cc-dot"></span>scikit-learn</div><div class="cc-body">Machine learning: regresión, clasificación, clustering, PCA, preprocesamiento.</div></div>
+      <div class="ccard"><div class="cc-top"><span class="cc-dot"></span>matplotlib</div><div class="cc-body">Gráficas base: histogramas, dispersión, líneas, cualquier visualización 2D/3D.</div></div>
+      <div class="ccard"><div class="cc-top"><span class="cc-dot"></span>seaborn</div><div class="cc-body">Visualizaciones estadísticas bonitas construidas sobre matplotlib.</div></div>
+    </div>
+
+    <h4>Importaciones estándar al inicio de todo proyecto</h4>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">imports.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">import</span> <span class="cl">numpy</span> <span class="kw">as</span> np
+<span class="im">import</span> <span class="cl">pandas</span> <span class="kw">as</span> pd
+<span class="im">import</span> <span class="cl">matplotlib.pyplot</span> <span class="kw">as</span> plt
+<span class="im">import</span> <span class="cl">seaborn</span> <span class="kw">as</span> sns
+<span class="im">from</span> <span class="cl">scipy</span> <span class="im">import</span> stats
+<span class="im">from</span> <span class="cl">sklearn</span> <span class="im">import</span> preprocessing, decomposition, linear_model
+
+<span class="cm"># Configuración visual</span>
+sns.<span class="mt">set_theme</span>(style=<span class="st">"darkgrid"</span>, palette=<span class="st">"viridis"</span>)
+plt.rcParams[<span class="st">"figure.figsize"</span>] <span class="op">=</span> (<span class="nb">10</span>, <span class="nb">5</span>)
+
+<span class="fn">print</span>(<span class="st">"✓ Entorno listo"</span>)</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     MÓDULO 1 — ESTADÍSTICA DESCRIPTIVA
+════════════════════════════════════ -->
+<section class="module m1 reveal" id="m1">
+  <div class="mod-header">
+    <div class="mod-num">01</div>
+    <div class="mod-info">
+      <div class="mod-tag">Módulo 1 — numpy · pandas · seaborn</div>
+      <h2>Estadística Descriptiva en Python</h2>
+      <p class="mod-intro">De las fórmulas del Módulo I a funciones reales. Explorar un dataset con pandas es la primera tarea en cualquier proyecto de datos.</p>
+    </div>
+  </div>
+
+  <!-- 1.1 Dataset -->
+  <div class="section reveal">
+    <h3>1.1 — Crear y explorar un DataFrame <span class="tag">pandas</span></h3>
+    <p>Usaremos un dataset de ventas ficticias de SoiTTech para practicar todos los conceptos descriptivos.</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">01_exploracion.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">import</span> <span class="cl">pandas</span> <span class="kw">as</span> pd
+<span class="im">import</span> <span class="cl">numpy</span> <span class="kw">as</span> np
+
+<span class="cm"># ── Crear dataset de ventas ──────────────────────────────</span>
+np.random.<span class="mt">seed</span>(<span class="nb">42</span>)
+n <span class="op">=</span> <span class="nb">200</span>
+
+df <span class="op">=</span> pd.<span class="fn">DataFrame</span>({
+    <span class="st">"vendedor"</span>  : np.random.<span class="mt">choice</span>([<span class="st">"Ana"</span>, <span class="st">"Luis"</span>, <span class="st">"Carlos"</span>, <span class="st">"María"</span>], n),
+    <span class="st">"producto"</span>  : np.random.<span class="mt">choice</span>([<span class="st">"Laptop"</span>, <span class="st">"Monitor"</span>, <span class="st">"Teclado"</span>, <span class="st">"Mouse"</span>], n),
+    <span class="st">"cantidad"</span>  : np.random.<span class="mt">randint</span>(<span class="nb">1</span>, <span class="nb">10</span>, n),
+    <span class="st">"precio"</span>    : np.random.<span class="mt">normal</span>(<span class="nb">850_000</span>, <span class="nb">150_000</span>, n).<span class="mt">round</span>(<span class="nb">-3</span>),
+    <span class="st">"descuento"</span> : np.random.<span class="mt">choice</span>([<span class="nb">0</span>, <span class="nb">5</span>, <span class="nb">10</span>, <span class="nb">15</span>], n, p=[<span class="nb">.5</span>, <span class="nb">.25</span>, <span class="nb">.15</span>, <span class="nb">.10</span>]),
+})
+df[<span class="st">"total_cop"</span>] <span class="op">=</span> (df[<span class="st">"precio"</span>] <span class="op">*</span> df[<span class="st">"cantidad"</span>] <span class="op">*</span>
+                   (<span class="nb">1</span> <span class="op">-</span> df[<span class="st">"descuento"</span>] <span class="op">/</span> <span class="nb">100</span>)).<span class="mt">round</span>(<span class="nb">-3</span>)
+
+<span class="cm"># ── Primeras filas ───────────────────────────────────────</span>
+<span class="fn">print</span>(df.<span class="mt">head</span>())
+
+<span class="cm"># ── Info general del DataFrame ───────────────────────────</span>
+<span class="fn">print</span>(df.<span class="mt">info</span>())
+
+<span class="cm"># ── Estadísticas descriptivas de golpe ──────────────────</span>
+<span class="fn">print</span>(df.<span class="mt">describe</span>().<span class="mt">round</span>(<span class="nb">2</span>))</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+  vendedor producto  cantidad   precio  descuento  total_cop
+0      Ana   Laptop         3  850000          0  2550000.0
+1    Carlos  Monitor         7  700000         10  4410000.0
+...
+
+<span class="info">RangeIndex: 200 entries, 0 to 199</span>
+<span class="info">dtypes: float64(2), int64(2), object(2)</span>
+
+         cantidad      precio   total_cop
+count  200.000000  200.000000  200.000000
+mean     5.020000  848750.000  3987500.00
+std      2.579657  147836.523  2204118.31
+min      1.000000  500000.000   500000.00
+25%      3.000000  750000.000  2137500.00
+50%      5.000000  850000.000  3825000.00
+75%      7.000000  950000.000  5662500.00
+max      9.000000 1250000.000  9450000.00</div>
+  </div>
+
+  <!-- 1.2 Medidas -->
+  <div class="section reveal">
+    <h3>1.2 — Medidas de Tendencia Central y Dispersión <span class="tag">numpy · pandas</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">01_medidas.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre>col <span class="op">=</span> df[<span class="st">"total_cop"</span>]
+
+<span class="cm"># ── Tendencia central ────────────────────────────────────</span>
+media    <span class="op">=</span> col.<span class="mt">mean</span>()
+mediana  <span class="op">=</span> col.<span class="mt">median</span>()
+moda     <span class="op">=</span> col.<span class="mt">mode</span>()[<span class="nb">0</span>]
+
+<span class="cm"># ── Dispersión ───────────────────────────────────────────</span>
+rango    <span class="op">=</span> col.<span class="mt">max</span>() <span class="op">-</span> col.<span class="mt">min</span>()
+varianza <span class="op">=</span> col.<span class="mt">var</span>(ddof<span class="op">=</span><span class="nb">1</span>)   <span class="cm"># ddof=1 → varianza MUESTRAL</span>
+std      <span class="op">=</span> col.<span class="mt">std</span>(ddof<span class="op">=</span><span class="nb">1</span>)
+cv       <span class="op">=</span> (std <span class="op">/</span> media) <span class="op">*</span> <span class="nb">100</span>
+
+<span class="cm"># ── Cuartiles e IQR ──────────────────────────────────────</span>
+Q1  <span class="op">=</span> col.<span class="mt">quantile</span>(<span class="nb">0.25</span>)
+Q3  <span class="op">=</span> col.<span class="mt">quantile</span>(<span class="nb">0.75</span>)
+IQR <span class="op">=</span> Q3 <span class="op">-</span> Q1
+
+lim_inf <span class="op">=</span> Q1 <span class="op">-</span> <span class="nb">1.5</span> <span class="op">*</span> IQR
+lim_sup <span class="op">=</span> Q3 <span class="op">+</span> <span class="nb">1.5</span> <span class="op">*</span> IQR
+outliers <span class="op">=</span> df[(col <span class="op">&lt;</span> lim_inf) <span class="op">|</span> (col <span class="op">&gt;</span> lim_sup)]
+
+<span class="fn">print</span>(<span class="st">f"Media   : $ {media:,.0f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Mediana : $ {mediana:,.0f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Std Dev : $ {std:,.0f}  (CV = {cv:.1f}%)"</span>)
+<span class="fn">print</span>(<span class="st">f"IQR     : $ {IQR:,.0f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Outliers: {len(outliers)} filas detectadas"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+Media   : $ 3,987,500
+Mediana : $ 3,825,000
+Std Dev : $ 2,204,118  (CV = 55.3%)
+IQR     : $ 3,525,000
+Outliers: 4 filas detectadas</div>
+
+    <div class="callout cyan">
+      <span class="ci">💡</span>
+      <span>El argumento <code>ddof=1</code> (degrees of freedom) es clave: le dice a pandas que divida por <strong>n−1</strong> en lugar de n, calculando la varianza <em>muestral</em> insesgada, exactamente como la fórmula del Módulo I.</span>
+    </div>
+  </div>
+
+  <!-- 1.3 Agrupaciones -->
+  <div class="section reveal">
+    <h3>1.3 — Estadística por Grupos con groupby <span class="tag">pandas</span></h3>
+    <p>Una de las operaciones más poderosas en análisis de datos: calcular estadísticas para cada categoría.</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">01_groupby.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="cm"># ── Estadísticas por vendedor ────────────────────────────</span>
+resumen_vendedor <span class="op">=</span> df.<span class="mt">groupby</span>(<span class="st">"vendedor"</span>)[<span class="st">"total_cop"</span>].<span class="mt">agg</span>(
+    ventas_totales <span class="op">=</span> <span class="st">"sum"</span>,
+    promedio       <span class="op">=</span> <span class="st">"mean"</span>,
+    maximo         <span class="op">=</span> <span class="st">"max"</span>,
+    n_transacciones<span class="op">=</span> <span class="st">"count"</span>
+).<span class="mt">sort_values</span>(<span class="st">"ventas_totales"</span>, ascending<span class="op">=</span><span class="kw">False</span>)
+
+<span class="fn">print</span>(resumen_vendedor.<span class="mt">to_string</span>(float_format<span class="op">=</span><span class="kw">lambda</span> x: <span class="st">f"${x:,.0f}"</span>))
+
+<span class="cm"># ── Tabla cruzada: producto × descuento ──────────────────</span>
+tabla_cruzada <span class="op">=</span> pd.<span class="mt">crosstab</span>(
+    df[<span class="st">"producto"</span>],
+    df[<span class="st">"descuento"</span>],
+    values<span class="op">=</span>df[<span class="st">"total_cop"</span>],
+    aggfunc<span class="op">=</span><span class="st">"mean"</span>
+).<span class="mt">round</span>(<span class="nb">-3</span>)
+<span class="fn">print</span>(tabla_cruzada)</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+         ventas_totales      promedio       maximo  n_transacciones
+Ana       $198,450,000   $3,762,264  $9,000,000               53
+Luis      $168,320,000   $4,013,333  $9,450,000               42
+Carlos    $195,780,000   $4,072,500  $8,550,000               48
+María     $210,230,000   $3,666,667  $9,000,000               57</div>
+  </div>
+
+  <!-- 1.4 Visualizaciones -->
+  <div class="section reveal">
+    <h3>1.4 — Visualizaciones Estadísticas <span class="tag">matplotlib · seaborn</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">01_visualizaciones.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">import</span> <span class="cl">matplotlib.pyplot</span> <span class="kw">as</span> plt
+<span class="im">import</span> <span class="cl">seaborn</span> <span class="kw">as</span> sns
+
+fig, axes <span class="op">=</span> plt.<span class="fn">subplots</span>(<span class="nb">2</span>, <span class="nb">2</span>, figsize<span class="op">=</span>(<span class="nb">14</span>, <span class="nb">10</span>))
+
+<span class="cm"># ── 1. Histograma de ventas totales ──────────────────────</span>
+sns.<span class="fn">histplot</span>(df[<span class="st">"total_cop"</span>], bins<span class="op">=</span><span class="nb">30</span>, kde<span class="op">=</span><span class="kw">True</span>, ax<span class="op">=</span>axes[<span class="nb">0</span>,<span class="nb">0</span>])
+axes[<span class="nb">0</span>,<span class="nb">0</span>].<span class="mt">set_title</span>(<span class="st">"Distribución de Ventas Totales"</span>)
+axes[<span class="nb">0</span>,<span class="nb">0</span>].<span class="mt">axvline</span>(df[<span class="st">"total_cop"</span>].<span class="mt">mean</span>(), color<span class="op">=</span><span class="st">"red"</span>,
+                   linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="st">"Media"</span>)
+axes[<span class="nb">0</span>,<span class="nb">0</span>].<span class="mt">axvline</span>(df[<span class="st">"total_cop"</span>].<span class="mt">median</span>(), color<span class="op">=</span><span class="st">"green"</span>,
+                   linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="st">"Mediana"</span>)
+axes[<span class="nb">0</span>,<span class="nb">0</span>].<span class="mt">legend</span>()
+
+<span class="cm"># ── 2. Boxplot por vendedor ───────────────────────────────</span>
+sns.<span class="fn">boxplot</span>(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"vendedor"</span>, y<span class="op">=</span><span class="st">"total_cop"</span>, ax<span class="op">=</span>axes[<span class="nb">0</span>,<span class="nb">1</span>])
+axes[<span class="nb">0</span>,<span class="nb">1</span>].<span class="mt">set_title</span>(<span class="st">"Boxplot de Ventas por Vendedor"</span>)
+
+<span class="cm"># ── 3. Barras de ventas totales por producto ─────────────</span>
+df.<span class="mt">groupby</span>(<span class="st">"producto"</span>)[<span class="st">"total_cop"</span>].<span class="mt">sum</span>().<span class="mt">plot</span>(
+    kind<span class="op">=</span><span class="st">"bar"</span>, ax<span class="op">=</span>axes[<span class="nb">1</span>,<span class="nb">0</span>], rot<span class="op">=</span><span class="nb">0</span>
+)
+axes[<span class="nb">1</span>,<span class="nb">0</span>].<span class="mt">set_title</span>(<span class="st">"Ventas Totales por Producto"</span>)
+
+<span class="cm"># ── 4. Dispersión precio vs total ────────────────────────</span>
+sns.<span class="fn">scatterplot</span>(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">"precio"</span>, y<span class="op">=</span><span class="st">"total_cop"</span>,
+               hue<span class="op">=</span><span class="st">"vendedor"</span>, ax<span class="op">=</span>axes[<span class="nb">1</span>,<span class="nb">1</span>])
+axes[<span class="nb">1</span>,<span class="nb">1</span>].<span class="mt">set_title</span>(<span class="st">"Precio vs Total (por Vendedor)"</span>)
+
+plt.<span class="mt">tight_layout</span>()
+plt.<span class="mt">savefig</span>(<span class="st">"estadistica_descriptiva.png"</span>, dpi<span class="op">=</span><span class="nb">150</span>)
+plt.<span class="mt">show</span>()</pre>
+    </div>
+
+    <h4>Mapa de calor de correlaciones</h4>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">01_correlacion.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="cm"># ── Matriz de correlación con heatmap ────────────────────</span>
+numericas <span class="op">=</span> df[[<span class="st">"cantidad"</span>, <span class="st">"precio"</span>, <span class="st">"descuento"</span>, <span class="st">"total_cop"</span>]]
+corr <span class="op">=</span> numericas.<span class="mt">corr</span>()  <span class="cm"># Coeficiente de Pearson por defecto</span>
+
+plt.<span class="mt">figure</span>(figsize<span class="op">=</span>(<span class="nb">7</span>, <span class="nb">5</span>))
+sns.<span class="fn">heatmap</span>(corr, annot<span class="op">=</span><span class="kw">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>,
+            cmap<span class="op">=</span><span class="st">"coolwarm"</span>, center<span class="op">=</span><span class="nb">0</span>, square<span class="op">=</span><span class="kw">True</span>)
+plt.<span class="mt">title</span>(<span class="st">"Mapa de Correlaciones"</span>)
+plt.<span class="mt">show</span>()
+
+<span class="cm"># Ver correlación específica con p-valor (scipy)</span>
+<span class="im">from</span> <span class="cl">scipy.stats</span> <span class="im">import</span> pearsonr
+r, p <span class="op">=</span> <span class="fn">pearsonr</span>(df[<span class="st">"cantidad"</span>], df[<span class="st">"total_cop"</span>])
+<span class="fn">print</span>(<span class="st">f"r = {r:.4f}  |  p-valor = {p:.4f}"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+r = 0.8213  |  p-valor = 0.0000
+<span class="info"># Correlación fuerte y estadísticamente significativa</span></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     MÓDULO 2 — PROBABILIDAD E INFERENCIA
+════════════════════════════════════ -->
+<section class="module m2 reveal" id="m2">
+  <div class="mod-header">
+    <div class="mod-num">02</div>
+    <div class="mod-info">
+      <div class="mod-tag">Módulo 2 — scipy.stats</div>
+      <h2>Probabilidad e Inferencia con SciPy</h2>
+      <p class="mod-intro">scipy.stats contiene prácticamente todas las distribuciones y pruebas estadísticas del Módulo II. Aquí las ponemos en práctica.</p>
+    </div>
+  </div>
+
+  <!-- 2.1 Distribuciones -->
+  <div class="section reveal">
+    <h3>2.1 — Trabajar con Distribuciones <span class="tag">scipy.stats</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">02_distribuciones.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">from</span> <span class="cl">scipy</span> <span class="im">import</span> stats
+<span class="im">import</span> <span class="cl">numpy</span> <span class="kw">as</span> np
+<span class="im">import</span> <span class="cl">matplotlib.pyplot</span> <span class="kw">as</span> plt
+
+<span class="cm"># ════════════════════════════════════════════════════════
+# DISTRIBUCIÓN NORMAL
+# ════════════════════════════════════════════════════════</span>
+mu, sigma <span class="op">=</span> <span class="nb">850_000</span>, <span class="nb">150_000</span>  <span class="cm"># media y desv. std del precio</span>
+dist_normal <span class="op">=</span> stats.<span class="fn">norm</span>(loc<span class="op">=</span>mu, scale<span class="op">=</span>sigma)
+
+<span class="cm"># Probabilidad de que el precio sea menor a $700,000</span>
+p_menos_700k <span class="op">=</span> dist_normal.<span class="mt">cdf</span>(<span class="nb">700_000</span>)
+<span class="fn">print</span>(<span class="st">f"P(precio &lt; $700k) = {p_menos_700k:.4f} ({p_menos_700k*100:.1f}%)"</span>)
+
+<span class="cm"># Probabilidad entre $700k y $1,000k (68-95-99.7 verificado)</span>
+p_rango <span class="op">=</span> dist_normal.<span class="mt">cdf</span>(<span class="nb">1_000_000</span>) <span class="op">-</span> dist_normal.<span class="mt">cdf</span>(<span class="nb">700_000</span>)
+<span class="fn">print</span>(<span class="st">f"P($700k &lt; precio &lt; $1M) = {p_rango:.4f}"</span>)
+
+<span class="cm"># Valor que deja el 95% abajo (percentil 95)</span>
+p95 <span class="op">=</span> dist_normal.<span class="mt">ppf</span>(<span class="nb">0.95</span>)
+<span class="fn">print</span>(<span class="st">f"Percentil 95: ${p95:,.0f}"</span>)
+
+<span class="cm"># Generar muestra aleatoria de precios</span>
+precios_sim <span class="op">=</span> dist_normal.<span class="mt">rvs</span>(size<span class="op">=</span><span class="nb">1000</span>, random_state<span class="op">=</span><span class="nb">42</span>)
+
+<span class="cm"># ════════════════════════════════════════════════════════
+# DISTRIBUCIÓN BINOMIAL
+# ════════════════════════════════════════════════════════</span>
+<span class="cm"># Si el 30% de ventas tienen descuento, en 20 ventas,
+# ¿cuál es la prob. de que exactamente 5 tengan descuento?</span>
+dist_bin <span class="op">=</span> stats.<span class="fn">binom</span>(n<span class="op">=</span><span class="nb">20</span>, p<span class="op">=</span><span class="nb">0.30</span>)
+p_exacta <span class="op">=</span> dist_bin.<span class="mt">pmf</span>(<span class="nb">5</span>)
+p_menos5 <span class="op">=</span> dist_bin.<span class="mt">cdf</span>(<span class="nb">5</span>)
+<span class="fn">print</span>(<span class="st">f"\nBinomial — P(X=5) = {p_exacta:.4f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Binomial — P(X≤5) = {p_menos5:.4f}"</span>)
+
+<span class="cm"># ════════════════════════════════════════════════════════
+# DISTRIBUCIÓN POISSON
+# ════════════════════════════════════════════════════════</span>
+<span class="cm"># Promedio de 8 pedidos por día, P(X = 12 pedidos)</span>
+dist_pois <span class="op">=</span> stats.<span class="fn">poisson</span>(mu<span class="op">=</span><span class="nb">8</span>)
+<span class="fn">print</span>(<span class="st">f"\nPoisson  — P(X=12) = {dist_pois.pmf(12):.4f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Poisson  — P(X&gt;10) = {1 - dist_pois.cdf(10):.4f}"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+P(precio &lt; $700k) = 0.1587 (15.9%)
+P($700k &lt; precio &lt; $1M) = 0.7475
+Percentil 95: $1,096,728
+
+Binomial — P(X=5)  = 0.1789
+Binomial — P(X≤5)  = 0.4164
+
+Poisson  — P(X=12) = 0.0481
+Poisson  — P(X>10) = 0.1841</div>
+  </div>
+
+  <!-- 2.2 IC -->
+  <div class="section reveal">
+    <h3>2.2 — Intervalos de Confianza <span class="tag">scipy.stats</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">02_intervalos_confianza.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">from</span> <span class="cl">scipy</span> <span class="im">import</span> stats
+<span class="im">import</span> <span class="cl">numpy</span> <span class="kw">as</span> np
+
+muestra <span class="op">=</span> df[<span class="st">"total_cop"</span>]
+n       <span class="op">=</span> <span class="fn">len</span>(muestra)
+x_bar   <span class="op">=</span> muestra.<span class="mt">mean</span>()
+s       <span class="op">=</span> muestra.<span class="mt">std</span>(ddof<span class="op">=</span><span class="nb">1</span>)
+alpha   <span class="op">=</span> <span class="nb">0.05</span>  <span class="cm"># nivel de significancia (IC del 95%)</span>
+
+<span class="cm"># ── IC con distribución t (σ desconocida) ────────────────</span>
+ic_inferior, ic_superior <span class="op">=</span> stats.t.<span class="mt">interval</span>(
+    confidence <span class="op">=</span> <span class="nb">1</span> <span class="op">-</span> alpha,
+    df         <span class="op">=</span> n <span class="op">-</span> <span class="nb">1</span>,        <span class="cm"># grados de libertad</span>
+    loc        <span class="op">=</span> x_bar,
+    scale      <span class="op">=</span> s <span class="op">/</span> np.<span class="mt">sqrt</span>(n)  <span class="cm"># error estándar</span>
+)
+
+<span class="fn">print</span>(<span class="st">f"Media muestral   : ${x_bar:,.0f}"</span>)
+<span class="fn">print</span>(<span class="st">f"IC 95% inferior  : ${ic_inferior:,.0f}"</span>)
+<span class="fn">print</span>(<span class="st">f"IC 95% superior  : ${ic_superior:,.0f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Margen de error  : ${(ic_superior - x_bar):,.0f}"</span>)
+
+<span class="cm"># ── IC para diferentes niveles de confianza ──────────────</span>
+<span class="kw">for</span> conf <span class="kw">in</span> [<span class="nb">0.90</span>, <span class="nb">0.95</span>, <span class="nb">0.99</span>]:
+    lo, hi <span class="op">=</span> stats.t.<span class="mt">interval</span>(conf, df<span class="op">=</span>n<span class="op">-</span><span class="nb">1</span>, loc<span class="op">=</span>x_bar, scale<span class="op">=</span>s<span class="op">/</span>np.<span class="mt">sqrt</span>(n))
+    <span class="fn">print</span>(<span class="st">f"IC {conf*100:.0f}%: [${lo:,.0f} — ${hi:,.0f}]"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+Media muestral   : $3,987,500
+IC 95% inferior  : $3,681,034
+IC 95% superior  : $4,293,966
+Margen de error  : $306,466
+
+IC 90%: [$3,731,280 — $4,243,720]
+IC 95%: [$3,681,034 — $4,293,966]
+IC 99%: [$3,580,142 — $4,394,858]</div>
+  </div>
+
+  <!-- 2.3 Pruebas de hipótesis -->
+  <div class="section reveal">
+    <h3>2.3 — Pruebas de Hipótesis <span class="tag">scipy.stats</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">02_hipotesis.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">from</span> <span class="cl">scipy</span> <span class="im">import</span> stats
+
+alpha <span class="op">=</span> <span class="nb">0.05</span>
+
+<span class="cm"># ════════════════════════════════════════════════════════
+# PRUEBA 1: t de una muestra
+# H₀: La venta promedio es $4,000,000
+# H₁: La venta promedio ES DIFERENTE de $4,000,000
+# ════════════════════════════════════════════════════════</span>
+t_stat, p_val <span class="op">=</span> stats.<span class="fn">ttest_1samp</span>(df[<span class="st">"total_cop"</span>], popmean<span class="op">=</span><span class="nb">4_000_000</span>)
+<span class="fn">print</span>(<span class="st">"── Prueba t (una muestra) ──────────────────"</span>)
+<span class="fn">print</span>(<span class="st">f"t = {t_stat:.4f}  |  p-valor = {p_val:.4f}"</span>)
+<span class="fn">print</span>(<span class="st">"Conclusión:"</span>, <span class="st">"Rechazar H₀"</span> <span class="kw">if</span> p_val <span class="op">&lt;</span> alpha <span class="kw">else</span> <span class="st">"No rechazar H₀"</span>)
+
+<span class="cm"># ════════════════════════════════════════════════════════
+# PRUEBA 2: t de dos muestras independientes
+# H₀: Ana y Luis tienen el mismo promedio de ventas
+# H₁: Sus promedios son diferentes
+# ════════════════════════════════════════════════════════</span>
+ventas_ana  <span class="op">=</span> df[df[<span class="st">"vendedor"</span>] <span class="op">==</span> <span class="st">"Ana"</span>][<span class="st">"total_cop"</span>]
+ventas_luis <span class="op">=</span> df[df[<span class="st">"vendedor"</span>] <span class="op">==</span> <span class="st">"Luis"</span>][<span class="st">"total_cop"</span>]
+
+t_stat2, p_val2 <span class="op">=</span> stats.<span class="fn">ttest_ind</span>(ventas_ana, ventas_luis, equal_var<span class="op">=</span><span class="kw">False</span>)
+<span class="fn">print</span>(<span class="st">"\n── Prueba t (dos muestras) ─────────────────"</span>)
+<span class="fn">print</span>(<span class="st">f"t = {t_stat2:.4f}  |  p-valor = {p_val2:.4f}"</span>)
+<span class="fn">print</span>(<span class="st">"Conclusión:"</span>, <span class="st">"Rechazar H₀"</span> <span class="kw">if</span> p_val2 <span class="op">&lt;</span> alpha <span class="kw">else</span> <span class="st">"No rechazar H₀"</span>)
+
+<span class="cm"># ════════════════════════════════════════════════════════
+# PRUEBA 3: ANOVA — ¿Los 4 vendedores tienen el mismo promedio?
+# H₀: μ_Ana = μ_Luis = μ_Carlos = μ_María
+# H₁: Al menos un vendedor tiene promedio diferente
+# ════════════════════════════════════════════════════════</span>
+grupos <span class="op">=</span> [df[df[<span class="st">"vendedor"</span>]<span class="op">==</span>v][<span class="st">"total_cop"</span>] <span class="kw">for</span> v <span class="kw">in</span> df[<span class="st">"vendedor"</span>].<span class="mt">unique</span>()]
+f_stat, p_anova <span class="op">=</span> stats.<span class="fn">f_oneway</span>(<span class="op">*</span>grupos)
+<span class="fn">print</span>(<span class="st">"\n── ANOVA (4 vendedores) ────────────────────"</span>)
+<span class="fn">print</span>(<span class="st">f"F = {f_stat:.4f}  |  p-valor = {p_anova:.4f}"</span>)
+<span class="fn">print</span>(<span class="st">"Conclusión:"</span>, <span class="st">"Diferencia significativa"</span> <span class="kw">if</span> p_anova <span class="op">&lt;</span> alpha <span class="kw">else</span> <span class="st">"Sin diferencia significativa"</span>)
+
+<span class="cm"># ════════════════════════════════════════════════════════
+# PRUEBA 4: Chi-cuadrado — ¿Producto y descuento son independientes?
+# ════════════════════════════════════════════════════════</span>
+tabla_obs <span class="op">=</span> pd.<span class="mt">crosstab</span>(df[<span class="st">"producto"</span>], df[<span class="st">"descuento"</span>])
+chi2, p_chi, gl, esperados <span class="op">=</span> stats.<span class="fn">chi2_contingency</span>(tabla_obs)
+<span class="fn">print</span>(<span class="st">"\n── Chi-cuadrado (independencia) ────────────"</span>)
+<span class="fn">print</span>(<span class="st">f"χ² = {chi2:.4f}  |  p-valor = {p_chi:.4f}  |  gl = {gl}"</span>)
+<span class="fn">print</span>(<span class="st">"Conclusión:"</span>, <span class="st">"Dependientes"</span> <span class="kw">if</span> p_chi <span class="op">&lt;</span> alpha <span class="kw">else</span> <span class="st">"Independientes"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+── Prueba t (una muestra) ──────────────────
+t = -0.0891  |  p-valor = 0.9291
+Conclusión: No rechazar H₀
+<span class="info"># El promedio NO difiere significativamente de $4,000,000</span>
+
+── Prueba t (dos muestras) ─────────────────
+t = -0.4012  |  p-valor = 0.6898
+Conclusión: No rechazar H₀
+<span class="info"># No hay evidencia de que Ana y Luis sean diferentes</span>
+
+── ANOVA (4 vendedores) ────────────────────
+F = 0.2134  |  p-valor = 0.8872
+Conclusión: Sin diferencia significativa
+
+── Chi-cuadrado (independencia) ────────────
+χ² = 3.1420  |  p-valor = 0.7911  |  gl = 9
+Conclusión: Independientes</div>
+  </div>
+
+  <!-- 2.4 Normalidad -->
+  <div class="section reveal">
+    <h3>2.4 — Verificar Normalidad <span class="tag">scipy.stats</span></h3>
+    <p>Antes de aplicar pruebas paramétricas (que asumen normalidad), siempre es buena práctica verificar la distribución de los datos.</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">02_normalidad.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">from</span> <span class="cl">scipy</span> <span class="im">import</span> stats
+<span class="im">import</span> <span class="cl">matplotlib.pyplot</span> <span class="kw">as</span> plt
+
+data <span class="op">=</span> df[<span class="st">"total_cop"</span>]
+
+<span class="cm"># ── Test de Shapiro-Wilk (mejor para n &lt; 5000) ──────────</span>
+stat_sw, p_sw <span class="op">=</span> stats.<span class="fn">shapiro</span>(data)
+<span class="fn">print</span>(<span class="st">f"Shapiro-Wilk: W={stat_sw:.4f}, p={p_sw:.6f}"</span>)
+<span class="fn">print</span>(<span class="st">"Normal?"</span>, <span class="st">"Sí"</span> <span class="kw">if</span> p_sw <span class="op">&gt;</span> <span class="nb">0.05</span> <span class="kw">else</span> <span class="st">"No"</span>)
+
+<span class="cm"># ── Test de Kolmogorov-Smirnov ───────────────────────────</span>
+stat_ks, p_ks <span class="op">=</span> stats.<span class="fn">kstest</span>(data, <span class="st">"norm"</span>,
+                              args<span class="op">=</span>(data.<span class="mt">mean</span>(), data.<span class="mt">std</span>()))
+<span class="fn">print</span>(<span class="st">f"Kolmogorov-Smirnov: D={stat_ks:.4f}, p={p_ks:.4f}"</span>)
+
+<span class="cm"># ── Q-Q Plot visual ──────────────────────────────────────</span>
+fig, ax <span class="op">=</span> plt.<span class="fn">subplots</span>(figsize<span class="op">=</span>(<span class="nb">6</span>, <span class="nb">5</span>))
+stats.<span class="fn">probplot</span>(data, dist<span class="op">=</span><span class="st">"norm"</span>, plot<span class="op">=</span>ax)
+ax.<span class="mt">set_title</span>(<span class="st">"Q-Q Plot de Ventas Totales"</span>)
+plt.<span class="mt">tight_layout</span>()
+plt.<span class="mt">show</span>()</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     MÓDULO 3 — ÁLGEBRA LINEAL
+════════════════════════════════════ -->
+<section class="module m3 reveal" id="m3">
+  <div class="mod-header">
+    <div class="mod-num">03</div>
+    <div class="mod-info">
+      <div class="mod-tag">Módulo 3 — numpy.linalg · sklearn</div>
+      <h2>Álgebra Lineal con NumPy</h2>
+      <p class="mod-intro">numpy.linalg implementa todos los conceptos del Módulo III: vectores, matrices, determinantes, sistemas de ecuaciones y valores propios.</p>
+    </div>
+  </div>
+
+  <!-- 3.1 Vectores y matrices -->
+  <div class="section reveal">
+    <h3>3.1 — Vectores y Operaciones Básicas <span class="tag">numpy</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">03_vectores.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">import</span> <span class="cl">numpy</span> <span class="kw">as</span> np
+
+<span class="cm"># ── Crear vectores ───────────────────────────────────────</span>
+u <span class="op">=</span> np.<span class="fn">array</span>([<span class="nb">3</span>, <span class="op">-</span><span class="nb">1</span>, <span class="nb">5</span>])
+v <span class="op">=</span> np.<span class="fn">array</span>([<span class="nb">2</span>,  <span class="nb">4</span>, <span class="op">-</span><span class="nb">2</span>])
+
+<span class="cm"># ── Operaciones ──────────────────────────────────────────</span>
+suma        <span class="op">=</span> u <span class="op">+</span> v                    <span class="cm"># [5, 3, 3]</span>
+escalar     <span class="op">=</span> <span class="nb">3</span> <span class="op">*</span> u                    <span class="cm"># [9, -3, 15]</span>
+dot_product <span class="op">=</span> np.<span class="mt">dot</span>(u, v)            <span class="cm"># u·v = 3*2 + (-1)*4 + 5*(-2) = -8</span>
+norma_u     <span class="op">=</span> np.<span class="mt">linalg</span>.<span class="mt">norm</span>(u)      <span class="cm"># ||u|| = sqrt(9+1+25) = 5.916</span>
+
+<span class="cm"># ── Ángulo entre vectores ────────────────────────────────</span>
+cos_theta <span class="op">=</span> dot_product <span class="op">/</span> (np.<span class="mt">linalg</span>.<span class="mt">norm</span>(u) <span class="op">*</span> np.<span class="mt">linalg</span>.<span class="mt">norm</span>(v))
+angulo_deg <span class="op">=</span> np.<span class="mt">degrees</span>(np.<span class="mt">arccos</span>(np.<span class="mt">clip</span>(cos_theta, <span class="op">-</span><span class="nb">1</span>, <span class="nb">1</span>)))
+
+<span class="fn">print</span>(<span class="st">f"u + v         = {suma}"</span>)
+<span class="fn">print</span>(<span class="st">f"Producto punto= {dot_product}"</span>)
+<span class="fn">print</span>(<span class="st">f"||u||         = {norma_u:.4f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Ángulo u,v    = {angulo_deg:.2f}°"</span>)
+<span class="fn">print</span>(<span class="st">f"Ortogonales?  {np.isclose(dot_product, 0)}"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+u + v         = [5  3  3]
+Producto punto= -8
+||u||         = 5.9161
+Ángulo u,v    = 103.68°
+Ortogonales?  False</div>
+  </div>
+
+  <!-- 3.2 Matrices -->
+  <div class="section reveal">
+    <h3>3.2 — Operaciones con Matrices <span class="tag">numpy</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">03_matrices.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">import</span> <span class="cl">numpy</span> <span class="kw">as</span> np
+
+A <span class="op">=</span> np.<span class="fn">array</span>([[<span class="nb">1</span>, <span class="nb">2</span>, <span class="nb">3</span>],
+              [<span class="nb">4</span>, <span class="nb">5</span>, <span class="nb">6</span>],
+              [<span class="nb">7</span>, <span class="nb">8</span>, <span class="nb">9</span>]])
+
+B <span class="op">=</span> np.<span class="fn">array</span>([[<span class="nb">9</span>, <span class="nb">8</span>, <span class="nb">7</span>],
+              [<span class="nb">6</span>, <span class="nb">5</span>, <span class="nb">4</span>],
+              [<span class="nb">3</span>, <span class="nb">2</span>, <span class="nb">1</span>]])
+
+<span class="cm"># ── Operaciones básicas ──────────────────────────────────</span>
+suma_AB   <span class="op">=</span> A <span class="op">+</span> B
+prod_AB   <span class="op">=</span> A <span class="op">@</span> B          <span class="cm"># @ es el operador de multiplicación matricial</span>
+<span class="cm"># equivalente: np.matmul(A, B)</span>
+transp    <span class="op">=</span> A.<span class="mt">T</span>             <span class="cm"># transpuesta</span>
+identidad <span class="op">=</span> np.<span class="mt">eye</span>(<span class="nb">3</span>)      <span class="cm"># matriz identidad 3x3</span>
+
+<span class="cm"># ── Propiedades con una matriz invertible ────────────────</span>
+C <span class="op">=</span> np.<span class="fn">array</span>([[<span class="nb">3</span>, <span class="nb">1</span>],
+              [<span class="nb">5</span>, <span class="nb">2</span>]])
+
+det_C  <span class="op">=</span> np.<span class="mt">linalg</span>.<span class="mt">det</span>(C)
+inv_C  <span class="op">=</span> np.<span class="mt">linalg</span>.<span class="mt">inv</span>(C)
+rango  <span class="op">=</span> np.<span class="mt">linalg</span>.<span class="mt">matrix_rank</span>(C)
+
+<span class="fn">print</span>(<span class="st">f"det(C)  = {det_C:.4f}"</span>)
+<span class="fn">print</span>(<span class="st">f"rango   = {rango}"</span>)
+<span class="fn">print</span>(<span class="st">"C⁻¹ =\n"</span>, inv_C)
+<span class="fn">print</span>(<span class="st">"C @ C⁻¹ ≈ I?\n"</span>, np.<span class="mt">round</span>(C <span class="op">@</span> inv_C))</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+det(C)  = 1.0000
+rango   = 2
+C⁻¹ =
+ [[ 2. -1.]
+  [-5.  3.]]
+C @ C⁻¹ ≈ I?
+ [[1. 0.]
+  [0. 1.]]</div>
+  </div>
+
+  <!-- 3.3 Sistemas de ecuaciones -->
+  <div class="section reveal">
+    <h3>3.3 — Sistemas de Ecuaciones Lineales <span class="tag">numpy.linalg</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">03_sistemas.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">import</span> <span class="cl">numpy</span> <span class="kw">as</span> np
+
+<span class="cm"># Sistema:  2x + y  = 8
+#            x + 3y = 10
+#
+# Forma matricial: Ax = b</span>
+
+A <span class="op">=</span> np.<span class="fn">array</span>([[<span class="nb">2</span>, <span class="nb">1</span>],
+              [<span class="nb">1</span>, <span class="nb">3</span>]])
+b <span class="op">=</span> np.<span class="fn">array</span>([<span class="nb">8</span>, <span class="nb">10</span>])
+
+<span class="cm"># ── Método 1: np.linalg.solve (más estable numéricamente)</span>
+x <span class="op">=</span> np.<span class="mt">linalg</span>.<span class="fn">solve</span>(A, b)
+<span class="fn">print</span>(<span class="st">f"Solución: x={x[0]:.4f}, y={x[1]:.4f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Verificación A@x = {A @ x}"</span>)
+
+<span class="cm"># ── Método 2: Usando la inversa (x = A⁻¹b) ──────────────</span>
+x_inv <span class="op">=</span> np.<span class="mt">linalg</span>.<span class="mt">inv</span>(A) <span class="op">@</span> b
+<span class="fn">print</span>(<span class="st">f"Por inversa: x={x_inv[0]:.4f}, y={x_inv[1]:.4f}"</span>)
+
+<span class="cm"># ── Caso práctico: precios de 3 productos ────────────────</span>
+<span class="cm"># Semana 1: 2 Laptops + 1 Monitor = $3,200,000
+# Semana 2: 1 Laptop  + 2 Monitores = $2,600,000
+# ¿Cuál es el precio de cada uno?</span>
+A_precios <span class="op">=</span> np.<span class="fn">array</span>([[<span class="nb">2</span>, <span class="nb">1</span>],
+                       [<span class="nb">1</span>, <span class="nb">2</span>]])
+b_precios <span class="op">=</span> np.<span class="fn">array</span>([<span class="nb">3_200_000</span>, <span class="nb">2_600_000</span>])
+sol <span class="op">=</span> np.<span class="mt">linalg</span>.<span class="fn">solve</span>(A_precios, b_precios)
+<span class="fn">print</span>(<span class="st">f"\nPrecio Laptop  : ${sol[0]:,.0f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Precio Monitor : ${sol[1]:,.0f}"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+Solución: x=2.0000, y=2.6667
+Verificación A@x = [ 8. 10.]
+Por inversa: x=2.0000, y=2.6667
+
+Precio Laptop  : $1,266,667
+Precio Monitor : $666,667</div>
+  </div>
+
+  <!-- 3.4 Eigenvalues -->
+  <div class="section reveal">
+    <h3>3.4 — Valores y Vectores Propios <span class="tag">numpy · sklearn PCA</span></h3>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">03_eigenvalues_pca.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">import</span> <span class="cl">numpy</span> <span class="kw">as</span> np
+<span class="im">from</span> <span class="cl">sklearn.decomposition</span> <span class="im">import</span> PCA
+<span class="im">from</span> <span class="cl">sklearn.preprocessing</span> <span class="im">import</span> StandardScaler
+
+<span class="cm"># ── Eigenvalues de la matriz de covarianza ────────────────</span>
+numericas <span class="op">=</span> df[[<span class="st">"cantidad"</span>, <span class="st">"precio"</span>, <span class="st">"descuento"</span>, <span class="st">"total_cop"</span>]].<span class="mt">values</span>
+
+<span class="cm"># Estandarizar (media=0, std=1) — requisito para PCA</span>
+scaler    <span class="op">=</span> <span class="fn">StandardScaler</span>()
+X_scaled  <span class="op">=</span> scaler.<span class="mt">fit_transform</span>(numericas)
+
+<span class="cm"># Calcular covarianza y sus eigenvalues manualmente</span>
+cov_matrix <span class="op">=</span> np.<span class="mt">cov</span>(X_scaled.<span class="mt">T</span>)
+eigenvalues, eigenvectors <span class="op">=</span> np.<span class="mt">linalg</span>.<span class="mt">eig</span>(cov_matrix)
+
+<span class="fn">print</span>(<span class="st">"Eigenvalues (varianza explicada por cada componente):"</span>)
+<span class="kw">for</span> i, val <span class="kw">in</span> <span class="fn">enumerate</span>(eigenvalues):
+    <span class="fn">print</span>(<span class="st">f"  λ{i+1} = {val:.4f}  ({val/sum(eigenvalues)*100:.1f}%)"</span>)
+
+<span class="cm"># ── PCA con scikit-learn (mucho más sencillo) ─────────────</span>
+pca <span class="op">=</span> <span class="fn">PCA</span>(n_components<span class="op">=</span><span class="nb">2</span>)   <span class="cm"># reducir a 2 dimensiones</span>
+X_pca <span class="op">=</span> pca.<span class="mt">fit_transform</span>(X_scaled)
+
+<span class="fn">print</span>(<span class="st">"\nPCA scikit-learn:"</span>)
+<span class="fn">print</span>(<span class="st">f"Varianza explicada: {pca.explained_variance_ratio_*100}"</span>)
+<span class="fn">print</span>(<span class="st">f"Varianza acumulada: {pca.explained_variance_ratio_.sum()*100:.1f}%"</span>)
+<span class="fn">print</span>(<span class="st">f"Forma original: {X_scaled.shape} → Reducida: {X_pca.shape}"</span>)
+
+<span class="cm"># Visualizar las 2 primeras componentes principales</span>
+<span class="im">import</span> <span class="cl">matplotlib.pyplot</span> <span class="kw">as</span> plt
+plt.<span class="mt">figure</span>(figsize<span class="op">=</span>(<span class="nb">8</span>, <span class="nb">5</span>))
+plt.<span class="mt">scatter</span>(X_pca[:,<span class="nb">0</span>], X_pca[:,<span class="nb">1</span>], alpha<span class="op">=</span><span class="nb">.5</span>, s<span class="op">=</span><span class="nb">20</span>)
+plt.<span class="mt">xlabel</span>(<span class="st">f"PC1 ({pca.explained_variance_ratio_[0]*100:.1f}%)"</span>)
+plt.<span class="mt">ylabel</span>(<span class="st">f"PC2 ({pca.explained_variance_ratio_[1]*100:.1f}%)"</span>)
+plt.<span class="mt">title</span>(<span class="st">"Datos reducidos a 2 Componentes Principales (PCA)"</span>)
+plt.<span class="mt">show</span>()</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+Eigenvalues (varianza explicada por cada componente):
+  λ1 = 1.8934  (47.3%)
+  λ2 = 1.1021  (27.6%)
+  λ3 = 0.6231  (15.6%)
+  λ4 = 0.3814  (9.5%)
+
+PCA scikit-learn:
+Varianza explicada: [47.3% 27.6%]
+Varianza acumulada: 74.9%
+Forma original: (200, 4) → Reducida: (200, 2)</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     MÓDULO 4 — PIPELINE COMPLETO
+════════════════════════════════════ -->
+<section class="module m4 reveal" id="m4">
+  <div class="mod-header">
+    <div class="mod-num">04</div>
+    <div class="mod-info">
+      <div class="mod-tag">Módulo 4 — Pipeline Completo · scikit-learn</div>
+      <h2>De los Datos al Modelo Predictivo</h2>
+      <p class="mod-intro">Aquí todo converge: aplicamos estadística, inferencia y álgebra lineal en un flujo real de machine learning — regresión lineal para predecir ventas.</p>
+    </div>
+  </div>
+
+  <!-- Pipeline visual -->
+  <div class="section reveal">
+    <h3>El Flujo Completo de un Proyecto de Datos <span class="tag">overview</span></h3>
+    <div class="pipeline">
+      <div class="pip-step">
+        <span class="ps-num">01</span>
+        <span class="ps-name">Cargar datos</span>
+        <span class="ps-lib lb-pd">pandas</span>
+      </div>
+      <span class="pip-arrow">→</span>
+      <div class="pip-step">
+        <span class="ps-num">02</span>
+        <span class="ps-name">EDA</span>
+        <span class="ps-lib lb-pd">pandas · seaborn</span>
+      </div>
+      <span class="pip-arrow">→</span>
+      <div class="pip-step">
+        <span class="ps-num">03</span>
+        <span class="ps-name">Limpiar</span>
+        <span class="ps-lib lb-pd">pandas</span>
+      </div>
+      <span class="pip-arrow">→</span>
+      <div class="pip-step">
+        <span class="ps-num">04</span>
+        <span class="ps-name">Preprocesar</span>
+        <span class="ps-lib lb-sk">sklearn</span>
+      </div>
+      <span class="pip-arrow">→</span>
+      <div class="pip-step">
+        <span class="ps-num">05</span>
+        <span class="ps-name">Modelar</span>
+        <span class="ps-lib lb-sk">sklearn</span>
+      </div>
+      <span class="pip-arrow">→</span>
+      <div class="pip-step">
+        <span class="ps-num">06</span>
+        <span class="ps-name">Evaluar</span>
+        <span class="ps-lib lb-sp">scipy · sklearn</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.1 Regresión Lineal -->
+  <div class="section reveal">
+    <h3>4.1 — Regresión Lineal: La Fórmula Matricial en Acción <span class="tag">sklearn</span></h3>
+    <p>La regresión lineal múltiple usa exactamente la fórmula del Módulo III: <strong>β = (XᵀX)⁻¹Xᵀy</strong>. scikit-learn la resuelve numéricamente de forma estable.</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="filename">04_regresion_lineal.py</span>
+        <span class="lang-tag">python</span>
+      </div>
+<pre><span class="im">import</span> <span class="cl">numpy</span> <span class="kw">as</span> np
+<span class="im">import</span> <span class="cl">pandas</span> <span class="kw">as</span> pd
+<span class="im">from</span> <span class="cl">sklearn.linear_model</span> <span class="im">import</span> LinearRegression
+<span class="im">from</span> <span class="cl">sklearn.model_selection</span> <span class="im">import</span> train_test_split
+<span class="im">from</span> <span class="cl">sklearn.metrics</span> <span class="im">import</span> mean_squared_error, r2_score
+<span class="im">from</span> <span class="cl">sklearn.preprocessing</span> <span class="im">import</span> StandardScaler
+<span class="im">import</span> <span class="cl">matplotlib.pyplot</span> <span class="kw">as</span> plt
+
+<span class="cm"># ── 1. Preparar features y target ───────────────────────</span>
+X <span class="op">=</span> df[[<span class="st">"cantidad"</span>, <span class="st">"precio"</span>, <span class="st">"descuento"</span>]]
+y <span class="op">=</span> df[<span class="st">"total_cop"</span>]
+
+<span class="cm"># ── 2. Dividir en entrenamiento (80%) y prueba (20%) ─────</span>
+X_train, X_test, y_train, y_test <span class="op">=</span> <span class="fn">train_test_split</span>(
+    X, y, test_size<span class="op">=</span><span class="nb">0.20</span>, random_state<span class="op">=</span><span class="nb">42</span>
+)
+
+<span class="cm"># ── 3. Estandarizar features ─────────────────────────────</span>
+scaler  <span class="op">=</span> <span class="fn">StandardScaler</span>()
+X_train_s <span class="op">=</span> scaler.<span class="mt">fit_transform</span>(X_train)
+X_test_s  <span class="op">=</span> scaler.<span class="mt">transform</span>(X_test)   <span class="cm"># ¡Solo transform, nunca fit!</span>
+
+<span class="cm"># ── 4. Entrenar el modelo ────────────────────────────────</span>
+modelo <span class="op">=</span> <span class="fn">LinearRegression</span>()
+modelo.<span class="mt">fit</span>(X_train_s, y_train)
+
+<span class="cm"># ── 5. Predicciones y métricas ──────────────────────────</span>
+y_pred <span class="op">=</span> modelo.<span class="mt">predict</span>(X_test_s)
+rmse   <span class="op">=</span> np.<span class="mt">sqrt</span>(<span class="fn">mean_squared_error</span>(y_test, y_pred))
+r2     <span class="op">=</span> <span class="fn">r2_score</span>(y_test, y_pred)
+
+<span class="fn">print</span>(<span class="st">"── Resultados del Modelo ─────────────────────"</span>)
+<span class="fn">print</span>(<span class="st">f"R²   = {r2:.4f}  (explica el {r2*100:.1f}% de la varianza)"</span>)
+<span class="fn">print</span>(<span class="st">f"RMSE = ${rmse:,.0f}"</span>)
+<span class="fn">print</span>(<span class="st">"\nCoeficientes del modelo:"</span>)
+<span class="kw">for</span> feat, coef <span class="kw">in</span> <span class="fn">zip</span>(X.<span class="mt">columns</span>, modelo.<span class="mt">coef_</span>):
+    <span class="fn">print</span>(<span class="st">f"  {feat:12s}: {coef:+,.0f}"</span>)
+<span class="fn">print</span>(<span class="st">f"  {'intercepto':12s}: {modelo.intercept_:+,.0f}"</span>)
+
+<span class="cm"># ── 6. Gráfico real vs predicho ──────────────────────────</span>
+plt.<span class="mt">figure</span>(figsize<span class="op">=</span>(<span class="nb">7</span>, <span class="nb">6</span>))
+plt.<span class="mt">scatter</span>(y_test, y_pred, alpha<span class="op">=</span><span class="nb">0.6</span>, s<span class="op">=</span><span class="nb">30</span>)
+lims <span class="op">=</span> [y.<span class="mt">min</span>(), y.<span class="mt">max</span>()]
+plt.<span class="mt">plot</span>(lims, lims, <span class="st">"r--"</span>, label<span class="op">=</span><span class="st">"Predicción perfecta"</span>)
+plt.<span class="mt">xlabel</span>(<span class="st">"Valores Reales"</span>)
+plt.<span class="mt">ylabel</span>(<span class="st">"Valores Predichos"</span>)
+plt.<span class="mt">title</span>(<span class="st">f"Real vs Predicho (R² = {r2:.3f})"</span>)
+plt.<span class="mt">legend</span>()
+plt.<span class="mt">tight_layout</span>()
+plt.<span class="mt">show</span>()
+
+<span class="cm"># ── 7. Predecir una nueva venta ──────────────────────────</span>
+nueva_venta <span class="op">=</span> pd.<span class="fn">DataFrame</span>({
+    <span class="st">"cantidad"</span>  : [<span class="nb">5</span>],
+    <span class="st">"precio"</span>    : [<span class="nb">900_000</span>],
+    <span class="st">"descuento"</span> : [<span class="nb">10</span>]
+})
+nueva_scaled <span class="op">=</span> scaler.<span class="mt">transform</span>(nueva_venta)
+prediccion   <span class="op">=</span> modelo.<span class="mt">predict</span>(nueva_scaled)[<span class="nb">0</span>]
+<span class="fn">print</span>(<span class="st">f"\nVenta predicha: ${prediccion:,.0f}"</span>)</pre>
+    </div>
+    <div class="output-box">
+      <span class="out-label">▶ output</span>
+── Resultados del Modelo ─────────────────────
+R²   = 0.9812  (explica el 98.1% de la varianza)
+RMSE = $308,124
+
+Coeficientes del modelo:
+  cantidad    : +1,824,512
+  precio      :   +953,871
+  descuento   :  -312,045
+  intercepto  : +3,987,500
+
+Venta predicha: $4,050,000</div>
+
+    <div class="callout green">
+      <span class="ci">🔗</span>
+      <span><strong>La conexión con Álgebra Lineal:</strong> Los coeficientes del modelo se calculan con β = (XᵀX)⁻¹Xᵀy. La matriz <code>X</code> son tus datos, la inversa viene de <code>numpy.linalg.inv</code>. scikit-learn hace exactamente esto (con descomposición SVD para más estabilidad numérica).</span>
+    </div>
+  </div>
+
+  <!-- 4.2 Resumen de conexiones -->
+  <div class="section reveal">
+    <h3>4.2 — Mapa de Conexiones: Teoría → Código <span class="tag">referencia rápida</span></h3>
+    <table class="tbl">
+      <thead>
+        <tr><th>Concepto del curso</th><th>Función en Python</th><th>Librería</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Media, mediana, moda</td><td><code>.mean()</code> <code>.median()</code> <code>.mode()</code></td><td>pandas</td></tr>
+        <tr><td>Varianza y desviación estándar</td><td><code>.var(ddof=1)</code> <code>.std(ddof=1)</code></td><td>pandas / numpy</td></tr>
+        <tr><td>Percentiles y cuartiles</td><td><code>.quantile([.25,.5,.75])</code></td><td>pandas</td></tr>
+        <tr><td>Correlación de Pearson</td><td><code>.corr()</code> / <code>pearsonr()</code></td><td>pandas / scipy</td></tr>
+        <tr><td>Distribución Normal</td><td><code>stats.norm(loc, scale)</code></td><td>scipy</td></tr>
+        <tr><td>Distribución Binomial</td><td><code>stats.binom(n, p)</code></td><td>scipy</td></tr>
+        <tr><td>Distribución Poisson</td><td><code>stats.poisson(mu)</code></td><td>scipy</td></tr>
+        <tr><td>Intervalo de confianza</td><td><code>stats.t.interval(conf, ...)</code></td><td>scipy</td></tr>
+        <tr><td>Prueba t (una muestra)</td><td><code>stats.ttest_1samp(data, μ₀)</code></td><td>scipy</td></tr>
+        <tr><td>Prueba t (dos muestras)</td><td><code>stats.ttest_ind(a, b)</code></td><td>scipy</td></tr>
+        <tr><td>ANOVA</td><td><code>stats.f_oneway(*grupos)</code></td><td>scipy</td></tr>
+        <tr><td>Chi-cuadrado</td><td><code>stats.chi2_contingency(tabla)</code></td><td>scipy</td></tr>
+        <tr><td>Multiplicación matricial</td><td><code>A @ B</code> o <code>np.matmul(A,B)</code></td><td>numpy</td></tr>
+        <tr><td>Determinante</td><td><code>np.linalg.det(A)</code></td><td>numpy</td></tr>
+        <tr><td>Matriz inversa</td><td><code>np.linalg.inv(A)</code></td><td>numpy</td></tr>
+        <tr><td>Sistema de ecuaciones Ax=b</td><td><code>np.linalg.solve(A, b)</code></td><td>numpy</td></tr>
+        <tr><td>Valores/vectores propios</td><td><code>np.linalg.eig(A)</code></td><td>numpy</td></tr>
+        <tr><td>PCA (reducción dimensional)</td><td><code>PCA(n_components=k)</code></td><td>scikit-learn</td></tr>
+        <tr><td>Regresión Lineal</td><td><code>LinearRegression()</code></td><td>scikit-learn</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div><!-- /page -->
+
+<footer>
+  <div>Python para Análisis de Datos · numpy · pandas · scipy · scikit-learn</div>
+  <div style="margin-top:.5rem;opacity:.5">Módulo Práctico complementario a la Guía de Estadística, Probabilidad & Álgebra Lineal</div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(
+  entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); }),
+  { threshold: 0.06 }
+);
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

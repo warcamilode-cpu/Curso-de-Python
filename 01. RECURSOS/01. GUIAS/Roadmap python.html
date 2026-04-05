@@ -1,0 +1,339 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --py-blue:#1a6bbf;--py-yellow:#f5c518;
+    --bg-card:var(--color-background-secondary);
+    --border:var(--color-border-tertiary);
+    --text:var(--color-text-primary);
+    --muted:var(--color-text-secondary);
+  }
+  body{font-family:'DM Sans',sans-serif}
+  .roadmap{padding:20px 16px;max-width:900px;margin:0 auto}
+  .title-row{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+  .py-badge{background:var(--py-blue);color:#fff;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;padding:6px 14px;border-radius:6px;letter-spacing:.5px}
+  .roadmap-title{font-size:20px;font-weight:700;color:var(--text)}
+  .roadmap-sub{font-size:13px;color:var(--muted);margin-top:2px}
+
+  /* GRID DE SECCIONES */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid.triple{grid-template-columns:1fr 1fr 1fr}
+  .grid.single{grid-template-columns:1fr}
+  .section{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  .section-head{padding:9px 14px;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .section-head .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .section-body{padding:10px 14px 12px;display:flex;flex-wrap:wrap;gap:6px}
+  .tag{font-size:11px;padding:3px 9px;border-radius:4px;font-weight:500;cursor:default;transition:opacity .15s}
+  .tag:hover{opacity:.7}
+
+  /* PALETA POR SECCIÓN */
+  .s-fundamentos .section-head{background:#e8f4fd;color:#0a4f8c}
+  .s-fundamentos .dot{background:#1a6bbf}
+  .s-fundamentos .tag{background:#dbeeff;color:#0a4f8c}
+  @media(prefers-color-scheme:dark){
+    .s-fundamentos .section-head{background:#0c2d4d;color:#7ec8f7}
+    .s-fundamentos .dot{background:#4fa8e8}
+    .s-fundamentos .tag{background:#0e3559;color:#7ec8f7}
+  }
+
+  .s-edd .section-head{background:#fdf0e8;color:#7a3d0f}
+  .s-edd .dot{background:#d4622b}
+  .s-edd .tag{background:#fde8d6;color:#7a3d0f}
+  @media(prefers-color-scheme:dark){
+    .s-edd .section-head{background:#3d1c07;color:#f0a07a}
+    .s-edd .dot{background:#e0743a}
+    .s-edd .tag{background:#4a2009;color:#f0a07a}
+  }
+
+  .s-avanzado .section-head{background:#f0ebfe;color:#4a2a9e}
+  .s-avanzado .dot{background:#6d3fd4}
+  .s-avanzado .tag{background:#e5dcfd;color:#4a2a9e}
+  @media(prefers-color-scheme:dark){
+    .s-avanzado .section-head{background:#231246;color:#bda9f5}
+    .s-avanzado .dot{background:#9070e8}
+    .s-avanzado .tag{background:#2c1857;color:#bda9f5}
+  }
+
+  .s-oop .section-head{background:#e8fdf3;color:#0a5e32}
+  .s-oop .dot{background:#1a8a52}
+  .s-oop .tag{background:#d4f5e4;color:#0a5e32}
+  @media(prefers-color-scheme:dark){
+    .s-oop .section-head{background:#042916;color:#5cd99a}
+    .s-oop .dot{background:#26b06a}
+    .s-oop .tag{background:#063420;color:#5cd99a}
+  }
+
+  .s-pkgs .section-head{background:#fef8e8;color:#7a5a0a}
+  .s-pkgs .dot{background:#c8920c}
+  .s-pkgs .tag{background:#fdf0c4;color:#7a5a0a}
+  @media(prefers-color-scheme:dark){
+    .s-pkgs .section-head{background:#3a2a04;color:#f5d070}
+    .s-pkgs .dot{background:#e0a820}
+    .s-pkgs .tag{background:#443204;color:#f5d070}
+  }
+
+  .s-framework .section-head{background:#fde8ed;color:#7a1030}
+  .s-framework .dot{background:#c4204a}
+  .s-framework .tag{background:#fcd3dc;color:#7a1030}
+  @media(prefers-color-scheme:dark){
+    .s-framework .section-head{background:#3d0414;color:#f57a9a}
+    .s-framework .dot{background:#e03060}
+    .s-framework .tag{background:#4a0618;color:#f57a9a}
+  }
+
+  .s-concurrencia .section-head{background:#e8f7fe;color:#0a5070}
+  .s-concurrencia .dot{background:#1080aa}
+  .s-concurrencia .tag{background:#d0effc;color:#0a5070}
+  @media(prefers-color-scheme:dark){
+    .s-concurrencia .section-head{background:#041c2d;color:#60c8f0}
+    .s-concurrencia .dot{background:#2090c8}
+    .s-concurrencia .tag{background:#052338;color:#60c8f0}
+  }
+
+  .s-entornos .section-head{background:#f5f0eb;color:#5a4530}
+  .s-entornos .dot{background:#a0785a}
+  .s-entornos .tag{background:#ede5da;color:#5a4530}
+  @media(prefers-color-scheme:dark){
+    .s-entornos .section-head{background:#2a1e12;color:#d0aa88}
+    .s-entornos .dot{background:#c09070}
+    .s-entornos .tag{background:#32241a;color:#d0aa88}
+  }
+
+  .s-tipado .section-head{background:#f0f5e8;color:#3a5a0a}
+  .s-tipado .dot{background:#5a8c1a}
+  .s-tipado .tag{background:#e2f0c8;color:#3a5a0a}
+  @media(prefers-color-scheme:dark){
+    .s-tipado .section-head{background:#182806;color:#a8d860}
+    .s-tipado .dot{background:#70aa28}
+    .s-tipado .tag{background:#1e3208;color:#a8d860}
+  }
+
+  .s-tools .section-head{background:#f0f0f5;color:#3a3a5a}
+  .s-tools .dot{background:#7070aa}
+  .s-tools .tag{background:#e4e4f0;color:#3a3a5a}
+  @media(prefers-color-scheme:dark){
+    .s-tools .section-head{background:#181828;color:#b0b0e0}
+    .s-tools .dot{background:#9090cc}
+    .s-tools .tag{background:#1e1e34;color:#b0b0e0}
+  }
+
+  .s-pruebas .section-head{background:#edfdf0;color:#0a5a20}
+  .s-pruebas .dot{background:#1aaa40}
+  .s-pruebas .tag{background:#d0f5dc;color:#0a5a20}
+  @media(prefers-color-scheme:dark){
+    .s-pruebas .section-head{background:#042212;color:#60e888}
+    .s-pruebas .dot{background:#28cc58}
+    .s-pruebas .tag{background:#052a17;color:#60e888}
+  }
+
+  /* DIVISOR DE FLUJO */
+  .flow-arrow{text-align:center;padding:6px 0;font-size:18px;color:var(--muted);line-height:1}
+  .section-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:12px 0 4px;text-align:center}
+
+  /* TAG ESPECIAL MONOSPACE */
+  .tag.mono{font-family:'JetBrains Mono',monospace;font-size:10px}
+
+  /* SUBTÍTULO DENTRO DEL GRUPO */
+  .sub-label{font-size:10px;font-weight:700;color:var(--muted);width:100%;margin-top:4px;margin-bottom:1px;letter-spacing:.4px}
+</style>
+
+<div class="roadmap">
+  <div class="title-row">
+    <span class="py-badge">Python</span>
+    <div>
+      <div class="roadmap-title">Ruta de Aprendizaje de Python</div>
+      <div class="roadmap-sub">Roadmap completo · traducido de roadmap.sh</div>
+    </div>
+  </div>
+
+  <!-- FILA 1: FUNDAMENTOS -->
+  <div class="grid single">
+    <div class="section s-fundamentos">
+      <div class="section-head"><span class="dot"></span>Aprende los Fundamentos</div>
+      <div class="section-body">
+        <span class="tag">Sintaxis Básica</span>
+        <span class="tag">Variables y Tipos de Datos</span>
+        <span class="tag">Condicionales</span>
+        <span class="tag">Conversión de Tipos</span>
+        <span class="tag">Excepciones</span>
+        <span class="tag">Funciones / Funciones Integradas</span>
+        <span class="tag">Listas</span>
+        <span class="tag">Tuplas</span>
+        <span class="tag">Conjuntos</span>
+        <span class="tag">Diccionarios</span>
+        <span class="tag">Bucles</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- FILA 2: EDD + OOP -->
+  <div class="grid">
+    <div class="section s-edd">
+      <div class="section-head"><span class="dot"></span>Estructuras de Datos y Algoritmos</div>
+      <div class="section-body">
+        <span class="tag">Arrays y Listas Enlazadas</span>
+        <span class="tag">Heaps, Pilas y Colas</span>
+        <span class="tag">Tablas Hash</span>
+        <span class="tag">Árbol de Búsqueda Binaria</span>
+        <span class="tag">Recursión</span>
+        <span class="tag">Algoritmos de Ordenamiento</span>
+      </div>
+    </div>
+    <div class="section s-oop">
+      <div class="section-head"><span class="dot"></span>Prog. Orientada a Objetos</div>
+      <div class="section-body">
+        <span class="tag">Clases</span>
+        <span class="tag">Herencia</span>
+        <span class="tag">Métodos</span>
+        <span class="tag">Dunder / Métodos Mágicos</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- FILA 3: MÓDULOS + AVANZADO -->
+  <div class="grid">
+    <div class="section s-tools">
+      <div class="section-head"><span class="dot"></span>Módulos</div>
+      <div class="section-body">
+        <div class="sub-label">Integrados</div>
+        <span class="tag mono">os</span>
+        <span class="tag mono">sys</span>
+        <span class="tag mono">math</span>
+        <span class="tag mono">datetime</span>
+        <div class="sub-label">Personalizados</div>
+        <span class="tag">Creación de módulos propios</span>
+      </div>
+    </div>
+    <div class="section s-avanzado">
+      <div class="section-head"><span class="dot"></span>Python Avanzado</div>
+      <div class="section-body">
+        <span class="tag">Lambdas</span>
+        <span class="tag">Decoradores</span>
+        <span class="tag">Iteradores</span>
+        <span class="tag">Expresiones Regulares</span>
+        <span class="tag">Comprensión de Listas</span>
+        <span class="tag">Expresiones Generadoras</span>
+        <span class="tag">Gestores de Contexto</span>
+        <span class="tag">Paradigmas</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- FILA 4: GESTORES + ENTORNOS -->
+  <div class="grid">
+    <div class="section s-pkgs">
+      <div class="section-head"><span class="dot"></span>Gestores de Paquetes</div>
+      <div class="section-body">
+        <span class="tag mono">pip / PyPI</span>
+        <span class="tag mono">conda</span>
+        <span class="tag mono">poetry</span>
+        <span class="tag mono">uv</span>
+        <span class="tag mono">pyproject.toml</span>
+        <span class="tag mono">Pipenv</span>
+      </div>
+    </div>
+    <div class="section s-entornos">
+      <div class="section-head"><span class="dot"></span>Entornos Virtuales</div>
+      <div class="section-body">
+        <span class="tag mono">virtualenv</span>
+        <span class="tag mono">pyenv</span>
+        <span class="tag mono">conda</span>
+        <span class="tag">Configuración del Entorno</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- FILA 5: FRAMEWORKS -->
+  <div class="section s-framework" style="margin-bottom:14px">
+    <div class="section-head"><span class="dot"></span>Aprende un Framework</div>
+    <div class="section-body">
+      <div class="sub-label">Síncronos</div>
+      <span class="tag mono">Pyramid</span>
+      <span class="tag mono">Plotly Dash</span>
+      <div class="sub-label">Asíncronos</div>
+      <span class="tag mono">gevent</span>
+      <span class="tag mono">aiohttp</span>
+      <span class="tag mono">Tornado</span>
+      <span class="tag mono">Sanic</span>
+      <div class="sub-label">Síncronos + Asíncronos</div>
+      <span class="tag mono" style="font-weight:700">FastAPI</span>
+      <span class="tag mono" style="font-weight:700">Django</span>
+      <span class="tag mono" style="font-weight:700">Flask</span>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- FILA 6: CONCURRENCIA + TIPADO -->
+  <div class="grid">
+    <div class="section s-concurrencia">
+      <div class="section-head"><span class="dot"></span>Concurrencia</div>
+      <div class="section-body">
+        <span class="tag">GIL (Global Interpreter Lock)</span>
+        <span class="tag">Hilos (Threading)</span>
+        <span class="tag">Multiprocesamiento</span>
+        <span class="tag">Asincronía (async/await)</span>
+      </div>
+    </div>
+    <div class="section s-tipado">
+      <div class="section-head"><span class="dot"></span>Tipado Estático</div>
+      <div class="section-body">
+        <span class="tag mono">Pydantic</span>
+        <span class="tag mono">mypy</span>
+        <span class="tag mono">pyright</span>
+        <span class="tag mono">pyre</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- FILA 7: HERRAMIENTAS DE CALIDAD + PRUEBAS -->
+  <div class="grid">
+    <div class="section s-tools">
+      <div class="section-head"><span class="dot"></span>Formato y Documentación</div>
+      <div class="section-body">
+        <div class="sub-label">Linters / Formatters</div>
+        <span class="tag mono">ruff</span>
+        <span class="tag mono">black</span>
+        <span class="tag mono">yapf</span>
+        <div class="sub-label">Documentación</div>
+        <span class="tag mono">Sphinx</span>
+      </div>
+    </div>
+    <div class="section s-pruebas">
+      <div class="section-head"><span class="dot"></span>Pruebas (Testing)</div>
+      <div class="section-body">
+        <span class="tag mono">pytest</span>
+        <span class="tag mono">unittest / pyUnit</span>
+        <span class="tag mono">doctest</span>
+        <span class="tag mono">nose</span>
+        <span class="tag mono">tox</span>
+        <span class="tag">typing</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <!-- FILA 8: DEVOPS -->
+  <div class="section s-tools">
+    <div class="section-head"><span class="dot"></span>DevOps y Siguientes Pasos</div>
+    <div class="section-body">
+      <span class="tag">Backend</span>
+      <span class="tag">IA / Ciencia de Datos</span>
+      <span class="tag">Paquetes Comunes</span>
+      <span class="tag">Integración Continua</span>
+      <span class="tag">Despliegue en la Nube</span>
+    </div>
+  </div>
+</div>
