@@ -179,8 +179,8 @@ Evoluciona semana a semana desde un script básico hasta un reporte automatizado
 
 ## 👤 Autor
 
-**Ronqui** — SoiTTech Colombia  
-Estudiante de pregrado · Desarrollador de aplicaciones de escritorio · Automatización con Python
+**Ronqui**  
+Estudiante de pregrado en Derecho · Desarrollador de aplicaciones · Automatización con Python
 
 ---
 
