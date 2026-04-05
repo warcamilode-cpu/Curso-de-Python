@@ -7,7 +7,7 @@ Plan estructurado de 14 semanas, desde lógica de programación hasta análisis 
 
 ## Sobre este repositorio
 
-Este repositorio documenta mi proceso de aprendizaje de Python aplicado a casos reales de **SoiTTech**, incluyendo ejercicios progresivos, scripts de producción y recursos de referencia.
+Este repositorio documenta mi proceso de aprendizaje de Python aplicado a casos reales, incluyendo ejercicios progresivos, scripts de producción y recursos de referencia.
 
 Todo el código está organizado por semana y etapa. Cada carpeta contiene los ejercicios practicados, el script de la semana y notas personales.
 
