@@ -1,0 +1,6 @@
+Completar tarjetas:
+1. reverse no esta
+2. Dale una definición a list comprehension
+3. agregar a la trajeta de f-string formato "El 02d significa: entero con mínimo 2 dígitos, rellena con ceros a la izquierda."
+4. Agregar round a las tarjetas
+5. 
