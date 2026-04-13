@@ -15,5 +15,3 @@ print(f"Tiempo minimo es de: {min(tiempos)}")
 print(f"El promedio de tiempos es de: {promedio:.2f}")
 print(f"Los tiempos por encima del promedio son: {aprobado}")
 print(f"Los tiempos redondeados son: {redondeo}")
-
-
