@@ -12,8 +12,6 @@ tasa_menos_aprobado = [aprobado - inscrito for aprobado, inscrito in zip(aprobad
 cargo_menos_competido = cargos[tasa_menos_aprobado.index(min(tasa_menos_aprobado))]
 
 
-
-
 for cargo, relacion in zip(cargos, relacion_inscrito_vacante):
     print(f"Relación inscritos/vacantes para {cargo}: {relacion:.2f}%")
 
