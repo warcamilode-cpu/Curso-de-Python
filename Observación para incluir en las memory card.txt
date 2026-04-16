@@ -13,8 +13,33 @@ B) Diccionarios:
 	- El if (Condicion) es opcional — solo lo pones si quieres filtrar.
 3. definición y regla de oro.
 4. patrónes más usados incluyendo este:
+- Contar ocurrencias
+estados = ["Aprobado", "Reprobado", "Aprobado",
+           "Aprobado", "Reprobado", "Aprobado"]
+
+conteo = {}
+for estado in estados:
+    conteo[estado] = conteo.get(estado, 0) + 1
+
+print(conteo)
+
+La línea clave — conteo.get(estado, 0) + 1:
+
+Si el estado no existe aún → .get devuelve 0 → guarda 1
+Si el estado ya existe → .get devuelve el conteo actual → le suma 1
+
+- Agrupar en listas
 agrupado = {}
 for elemento, clave in datos:
     if clave not in agrupado:
         agrupado[clave] = []
     agrupado[clave].append(elemento)
+
+print(agrupado)
+
+- Invertir un diccionario
+codigos = {"INPEC-01": "Dragoneante", "INPEC-02": "Profesional"}
+
+invertido = {valor: clave for clave, valor in codigos.items()}
+
+print(invertido)
