@@ -1,4 +1,5 @@
 Completar tarjetas:
+
 A) Listas
 1. reverse no esta en las tarjetas.
 2. Dale una definición a list comprehension
