@@ -1,6 +1,45 @@
 Completar tarjetas:
-1. reverse no esta
+
+A) Listas
+1. reverse no esta en las tarjetas.
 2. Dale una definición a list comprehension
 3. agregar a la trajeta de f-string formato "El 02d significa: entero con mínimo 2 dígitos, rellena con ceros a la izquierda."
 4. Agregar round a las tarjetas
-5. 
+
+B) Diccionarios:
+1. agregar los métodos agrupados .keys(), .values() e items() y así con del y pop etc.                                                                                   2.agregar las Formas del dict comprehension:
+	- La parte antes del for define qué va al diccionario → siempre clave: valor
+	- La parte del for es igual a cualquier bucle normal
+	- El if (Condicion) es opcional — solo lo pones si quieres filtrar.
+3. definición y regla de oro.
+4. patrónes más usados incluyendo este:
+- Contar ocurrencias
+estados = ["Aprobado", "Reprobado", "Aprobado",
+           "Aprobado", "Reprobado", "Aprobado"]
+
+conteo = {}
+for estado in estados:
+    conteo[estado] = conteo.get(estado, 0) + 1
+
+print(conteo)
+
+La línea clave — conteo.get(estado, 0) + 1:
+
+Si el estado no existe aún → .get devuelve 0 → guarda 1
+Si el estado ya existe → .get devuelve el conteo actual → le suma 1
+
+- Agrupar en listas
+agrupado = {}
+for elemento, clave in datos:
+    if clave not in agrupado:
+        agrupado[clave] = []
+    agrupado[clave].append(elemento)
+
+print(agrupado)
+
+- Invertir un diccionario
+codigos = {"INPEC-01": "Dragoneante", "INPEC-02": "Profesional"}
+
+invertido = {valor: clave for clave, valor in codigos.items()}
+
+print(invertido)

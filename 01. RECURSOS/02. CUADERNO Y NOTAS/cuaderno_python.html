@@ -97,6 +97,9 @@
   .btn-export:hover { background: rgba(255,255,255,0.2); color: #fff; }
   .btn-import { background: rgba(143,207,158,0.2); color: #8FCF9E; }
   .btn-import:hover { background: rgba(143,207,158,0.3); color: #B0E0BC; }
+  .btn-github { background: rgba(100,160,220,0.2); color: #90C8F0; width: 100%; }
+  .btn-github:hover { background: rgba(100,160,220,0.35); color: #C0E4FF; }
+  .btn-github:disabled { opacity: 0.5; cursor: not-allowed; }
   .import-hidden { display: none; }
   .toast {
     position: fixed;
@@ -754,6 +757,9 @@
     <button class="backup-btn btn-import" onclick="document.getElementById('import-file').click()">⬆ Importar</button>
     <input class="import-hidden" type="file" id="import-file" accept=".json" onchange="importarNotas(this)">
   </div>
+  <div class="backup-btns" style="padding-top:0">
+    <button class="backup-btn btn-github" onclick="cargarDesdeGitHub()">☁ Cargar desde GitHub</button>
+  </div>
   <div class="search-box">
     <input class="search-input" type="text" placeholder="🔍 Buscar tema..." oninput="buscarTema(this.value)">
   </div>
@@ -891,6 +897,35 @@ async function save(key, val) {
   try {
     localStorage.setItem('pycuaderno_' + key, JSON.stringify(val));
   } catch(e) {}
+}
+
+// ── GITHUB URL ──
+// Apunta al archivo JSON en tu repositorio público de GitHub.
+// Cuando exportes, sube el archivo como "cuaderno_python.json" al repo y este botón lo cargará automáticamente.
+const GITHUB_JSON_URL = 'https://raw.githubusercontent.com/warcamilode-cpu/Curso-de-Python/main/01.%20RECURSOS/02.%20CUADERNO%20Y%20NOTAS/02.%20NOTAS/cuaderno_python.json';
+
+async function cargarDesdeGitHub() {
+  const btn = document.querySelector('.btn-github');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Cargando...'; }
+  try {
+    const resp = await fetch(GITHUB_JSON_URL);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    let count = 0;
+    for (const [key, val] of Object.entries(data)) {
+      if (key.startsWith('pycuaderno_')) {
+        localStorage.setItem(key, val);
+        count++;
+      }
+    }
+    await updateDots();
+    if (currentWeek) openWeek(currentWeek.week, currentWeek.stage);
+    mostrarToast('☁ ' + count + ' entradas cargadas desde GitHub');
+  } catch(err) {
+    mostrarToast('✗ Error al cargar desde GitHub: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '☁ Cargar desde GitHub'; }
+  }
 }
 
 // Build sidebar nav
@@ -1102,7 +1137,7 @@ function exportarNotas() {
   const a = document.createElement('a');
   const fecha = new Date().toISOString().slice(0,10);
   a.href = url;
-  a.download = 'cuaderno_python_' + fecha + '.json';
+  a.download = 'cuaderno_python.json';
   a.click();
   URL.revokeObjectURL(url);
   mostrarToast('✓ Notas exportadas correctamente');
