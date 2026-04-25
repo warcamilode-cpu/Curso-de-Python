@@ -61,4 +61,4 @@ for i, (cargo, vancante, inscrito, aprobado, salario, relacion, tasa) in enumera
         f"{tasa:.2f}"
     )
 
-Console().print(t)
+Console().print(t) #carga
