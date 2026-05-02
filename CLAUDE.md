@@ -63,6 +63,10 @@ Curso-de-Python/
 │   ├── [02. CUADERNO Y NOTAS]/
 │   │   ├── [01. NOTAS]/
 │   │   ├── [02. Mi cartilla de Python]/
+│   │   │   ├── [Recursos cartilla]/
+│   │   │   ├── Cartilla_Python_Folleto_Oficio.pdf
+│   │   │   ├── Mi Cartilla Python v2.docx
+│   │   │   └── Logo de Python.webp
 │   │   ├── [03. Memory Cards]/
 │   │   │   ├── Observación para incluir en las memory card.txt
 │   │   │   └── Python Memory Cards.pdf
@@ -119,9 +123,9 @@ Curso-de-Python/
 | Recurso | Ruta |
 |---|---|
 | Cuaderno de Python (HTML) | `D:\Bibliotecas\Github\Curso-de-Python\01. RECURSOS\02. CUADERNO Y NOTAS\cuaderno_python.html` |
-| Cartilla de Python | `D:\Bibliotecas\Github\Curso-de-Python\[RUTA POR DEFINIR]\cartilla_python.docx` |
-| Memory Cards | `D:\Bibliotecas\Github\Curso-de-Python\[RUTA POR DEFINIR]\` |
-| Repositorio GitHub | `[URL del repositorio]` |
+| Cartilla de Python | `D:\Bibliotecas\Github\Curso-de-Python\01. RECURSOS\02. CUADERNO Y NOTAS\02. Mi cartilla de Python\Mi Cartilla Python v2.docx"` |
+| Memory Cards | `D:\Bibliotecas\Github\Curso-de-Python\01. RECURSOS\02. CUADERNO Y NOTAS\03. Memory Cards\Python Memory Cards.pdf` |
+| Repositorio GitHub | `https://github.com/warcamilode-cpu/Curso-de-Python` |
 
 ---
 
