@@ -1,137 +1,346 @@
-# Instrucciones para Claude (CLAUDE.md)
+# CLAUDE.md — Agente de Estudio
 
-Este archivo contiene reglas y contexto para el desarrollo del proyecto **"Enseñanza Curso Python"**.
-
----
-
-## 1. Contexto del Proyecto
-
-- **Tecnologías:** Python 3.12
-- **Objetivo:** Ejecutar la enseñanza de un curso de Python con programa estructurado por bloques temáticos.
-- **Estilo de asistencia:** Profesional, especialista en programación Python, análisis de datos con Python y manejo de bases de datos SQL (PostgreSQL, MySQL, SQLite).
+> Archivo de contexto para sesiones de Claude Code.
+> Leé este archivo completo antes de tocar cualquier código.
 
 ---
 
-## 2. Contexto del Desarrollador
+## Qué es este proyecto
 
-- **Nombre:** Ronqui
-- **Perfil:** Estudiante de derecho con especialización creciente en automatización de datos y procesos. Trabaja principalmente en la Universidad Libre (área de proyectos) y colabora con SoiTTech en proyectos específicos.
-- **Stack principal:** Python 3.12 · PyQt5 · pandas · openpyxl · Rich · Streamlit · SQLite · MySQL · Power BI · Excel
-- **Entorno de desarrollo:** iPad Air M4 con teclado mecánico · GitHub Codespaces como entorno principal
-- **Dominio profesional:** Gestión de datos del sector público colombiano, concursos de méritos para la función pública.
-- **Proyectos objetivo del curso:** Aplicación de gestión de talento · Sistema de repositorio de documentos · Herramienta de seguimiento de objetivos de equipo
+Aplicación web personal de estudio tipo "todo en uno" que combina:
+- Chat con IA tutora con contexto de notas propias
+- Gestión de notas en Markdown con tags
+- Sistema de flashcards con spaced repetition (algoritmo SM-2)
+- Dashboard de progreso y estadísticas
 
----
-
-## 3. Programa del Curso
-
-- **Bloque 0 — Lógica de programación:** Algoritmos · Pseudocódigo · Árbol de descomposición · Lógica Booleana
-- **Bloque 1 — Fundamentos absolutos:** Variables · Operadores · Strings · f-strings · Format Specifiers
-- **Bloque 2 — Control de flujo:** Condicionales · Bucles · break/continue · Patrones 01–07 · Mapas de proceso
-- **Bloque 3 — Estructuras de datos:** Listas · Diccionarios · Tuplas · Sets · Patrones 08–16
-- **Bloque 4 — Funciones:** def · parámetros · scope · return · lambda · map() · filter()
-- **Bloque 5 — Organización del código:** Módulos · venv/pip · Excepciones · Archivos de texto · datetime
-- **Bloque 6 — OOP Básica:** Clases · Objetos · __init__ · Métodos · Herencia
-- **Bloque 7 — Archivos, JSON y Bases de Datos:** open · read/write · json · csv · SQLite · sqlite3
-- **Bloque 8 — Librerías y automatización:** Rich · Pandas · OpenPyXL · NumPy · Matplotlib · Seaborn · Plotly · Streamlit · SciPy · Polars · urwid · Dask
-- **Ejercicios Integradores:** Ver instrucciones en Sección 4.
+**Dominio:** derecho colombiano + programación Python  
+**Usuarios:** uso personal (1 usuario, no hay auth por ahora)  
+**Acceso:** servidor Ubuntu local, accedido desde iPad Air M4 vía Tailscale
 
 ---
 
-## 4. Estilo de Respuesta
+## Stack tecnológico
 
-- Responde siempre en **español**.
-- Sé muy detallado en las explicaciones: comienza con definiciones y aplicabilidad del tema en la vida real.
-- Cuando crees un componente nuevo, proporciona el **código completo** de una vez.
-- Genera ejercicios basados en el contexto real de Ronqui: sector público colombiano, concursos de méritos, gestión documental, automatización de procesos. **Evita ejercicios genéricos** de frutas, estudiantes o listas de compras.
-- Crea y documenta **patrones de código importantes** por cada bloque.
-- Para los **Ejercicios Integradores** (al final del programa): genera ejercicios que combinen contenidos de múltiples bloques anteriores, con nivel de complejidad creciente y aplicación directa a los tres proyectos objetivo del curso.
+| Capa | Tecnología | Notas |
+|------|-----------|-------|
+| Backend | FastAPI (Python 3.11+) | Uvicorn como servidor |
+| Base de datos | SQLite | Un solo archivo `estudio.db` |
+| IA (dev) | Ollama local | Modelo `qwen2.5-coder:14b` (GTX 1080 Ti, 11 GB VRAM) |
+| IA (prod) | Anthropic Claude API | `claude-haiku-4-5-20251001` |
+| Frontend | HTML + CSS + Vanilla JS | Sin frameworks, sin build step |
+| Acceso remoto | Tailscale | Ya configurado en el servidor |
+
+**No usar:** React, Vue, Svelte, SQLAlchemy ORM, Alembic, Docker (innecesario para uso personal).  
+**Sí usar:** sqlite3 nativo de Python, anthropic SDK oficial, ollama SDK.
 
 ---
 
-## 5. Estructura del Repositorio
-
-> ⚠️ **Completa esta sección** con la estructura real de carpetas de tu repositorio clonado.
+## Estructura de directorios
 
 ```
-Curso-de-Python/
-├── 01. [RECURSOS]/
-│   ├── [01. GUIAS]/
-│   │   ├── Análisis de Datos con Python.html
-│   │   ├── Guia Interactiva de Python.html
-│   │   └── Roadmap python.html
-│   ├── [02. CUADERNO Y NOTAS]/
-│   │   ├── [01. NOTAS]/
-│   │   ├── [02. Mi cartilla de Python]/
-│   │   │   ├── [Recursos cartilla]/
-│   │   │   ├── Cartilla_Python_Folleto_Oficio.pdf
-│   │   │   ├── Mi Cartilla Python v2.docx
-│   │   │   └── Logo de Python.webp
-│   │   ├── [03. Memory Cards]/
-│   │   │   ├── Observación para incluir en las memory card.txt
-│   │   │   └── Python Memory Cards.pdf
-│   │   └── cuaderno_python.html
-│   ├── 03. [LIBROS]/
-│   │   ├── algoritmos-programacion-Python.pdf
-│   │   └── Python para todos.pdf
-│   └── 04. [OTROS]/
-│   │   ├── Ecosistema de analisis de datos con Python.docx
-│   │   ├── Guia Completa Python.docx
-│   │   ├── Patrones Python Completo.docx
-│   │   └── Plan Estudio Python Completo.docx
-├── 02. [ESTRUCTURA]/
-│   ├── [00. Bloque 0 —  Logica de Programacion]/
-│   ├── [01. Bloque 1 — Fundamentos absolutos]/
-│   ├── [02. Bloque 2 — Control de flujo]/
-│   ├── [03. Bloque 3 — Estructuras de datos]/
-│   │   ├── [01. Listas]/
-│   │   │   ├── Guía de listas en programación.png
-│   │   │   └── Listas en Python.m4a
-│   │   └── [02. Diccionarios]/
-│   │   │   ├── Diccionarios.png
-│   │   │   ├── Guía de diccionarios en programación.png
-│   │   │   └── Diccionarios de Python y tablas hash.m4a
-│   ├── [04. Bloque 4 — Funciones]/
-│   ├── [05. Bloque 5 — Organización del código]/
-│   ├── [06. Bloque 6 — OOP básica]/
-│   ├── [07. Bloque 7 — Archivos, JSON y Bases de Datos]/
-│   └── [08. Bloque 8 — Librerías y automatización]/
-├── 03. [EJERCICIOS DE PRANCTICA]/
-│   └── [01. LISTAS A FONDO]/
-│   │   │   ├── [01. FACIL]/
-│   │   │   ├── [02. MEDIO]/
-│   │   │   ├── [03. DIFICIL]/
-│   │   │   └── Ejercicio.py
-├── CLAUDE.md
-├── Ejercicio.py
-├── SCRIPT PARA CURSO.txt
-├── Calculadora de tiempos - urwid
-├── README.md
-├── [.vscode]/
-│   └── settings.json
-├── [.github]/
-│   └── [workflows]/
-└── 01. Aplicativo inscripciones.py
+agente-estudio/
+│
+├── CLAUDE.md                  # Este archivo
+├── main.py                    # Entry point FastAPI
+├── .env                       # Variables de entorno (no commitear)
+├── .env.example               # Plantilla de variables
+├── requirements.txt
+├── estudio.db                 # Base de datos SQLite (se crea automático)
+│
+├── routers/
+│   ├── __init__.py
+│   ├── ai_router.py           # Chat con IA, streaming, sesiones
+│   ├── notas_router.py        # CRUD de notas
+│   ├── flashcards_router.py   # CRUD de flashcards + lógica SRS
+│   ├── topics_router.py       # CRUD de temas/materias
+│   └── dashboard_router.py    # Stats y progreso
+│
+├── services/
+│   ├── __init__.py
+│   ├── llm_client.py          # Abstracción Ollama/Claude (swappable)
+│   ├── context_builder.py     # Búsqueda de notas + construcción de prompt
+│   └── srs_engine.py          # Algoritmo SM-2 para flashcards
+│
+├── database/
+│   ├── __init__.py
+│   ├── connection.py          # Conexión SQLite + context manager
+│   └── schema.sql             # Definición de tablas
+│
+└── frontend/
+    ├── index.html             # SPA principal
+    ├── css/
+    │   └── styles.css
+    └── js/
+        ├── app.js             # Router del frontend (tabs)
+        ├── chat.js            # Módulo chat con streaming SSE
+        ├── notas.js           # Módulo notas
+        ├── flashcards.js      # Módulo flashcards
+        └── dashboard.js       # Módulo estadísticas
 ```
 
 ---
 
-## 6. Recursos del Proyecto
+## Variables de entorno (`.env`)
 
-> ⚠️ **Verifica y actualiza las rutas** según la ubicación real en tu equipo.
+```env
+# Proveedor de IA: "ollama" (gratis, local) o "claude" (API de pago)
+LLM_PROVEEDOR=ollama
 
-| Recurso | Ruta |
-|---|---|
-| Cuaderno de Python (HTML) | `D:\Bibliotecas\Github\Curso-de-Python\01. RECURSOS\02. CUADERNO Y NOTAS\cuaderno_python.html` |
-| Cartilla de Python | `D:\Bibliotecas\Github\Curso-de-Python\01. RECURSOS\02. CUADERNO Y NOTAS\02. Mi cartilla de Python\Mi Cartilla Python v2.docx"` |
-| Memory Cards | `D:\Bibliotecas\Github\Curso-de-Python\01. RECURSOS\02. CUADERNO Y NOTAS\03. Memory Cards\Python Memory Cards.pdf` |
-| Repositorio GitHub | `https://github.com/warcamilode-cpu/Curso-de-Python` |
+# Ollama — corre en el mismo servidor Ubuntu
+# Hardware: GTX 1080 Ti 11 GB VRAM — qwen2.5-coder:14b usa ~8.2 GB, cabe cómodo
+# Alternativa jurídica: cambiar a qwen2.5:14b si se prioriza derecho sobre código
+OLLAMA_BASE_URL=http://localhost:11434
+MODELO_OLLAMA=qwen2.5-coder:14b
+
+# Claude API — solo si LLM_PROVEEDOR=claude
+ANTHROPIC_API_KEY=sk-ant-...
+MODELO_CLAUDE=claude-haiku-4-5-20251001
+
+# App
+APP_HOST=0.0.0.0
+APP_PORT=8000
+```
 
 ---
 
-## 7. Convenciones del Proyecto
+## Base de datos — schema completo
 
-- Un archivo `.py` por bloque temático, nombrado como `bloque_00_logica.py`, `bloque_01_fundamentos.py`, etc.
-- Los ejercicios se guardan en la carpeta correspondiente de cada bloque.
-- Los patrones de código se documentan con comentarios explicativos dentro del archivo del bloque.
-- El entorno virtual del proyecto se gestiona con `venv` y el archivo `requirements.txt` se mantiene actualizado.
+```sql
+-- database/schema.sql
+
+CREATE TABLE IF NOT EXISTS topics (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre      TEXT NOT NULL,
+    descripcion TEXT,
+    color       TEXT DEFAULT '#6366f1',   -- hex para UI
+    creado_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS notas (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    topic_id    INTEGER REFERENCES topics(id) ON DELETE SET NULL,
+    titulo      TEXT NOT NULL,
+    contenido   TEXT NOT NULL,            -- markdown
+    tags        TEXT DEFAULT '',          -- "tutela,derechos,mecanismos"
+    creada_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizada_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS flashcards (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    topic_id        INTEGER REFERENCES topics(id) ON DELETE SET NULL,
+    nota_id         INTEGER REFERENCES notas(id) ON DELETE SET NULL,
+    pregunta        TEXT NOT NULL,
+    respuesta       TEXT NOT NULL,
+    -- Campos SM-2
+    intervalo       INTEGER DEFAULT 1,    -- días hasta próximo repaso
+    repeticiones    INTEGER DEFAULT 0,    -- veces respondida correctamente seguidas
+    factor_facilidad REAL DEFAULT 2.5,   -- EF del algoritmo SM-2
+    proximo_repaso  DATE DEFAULT (date('now')),
+    creada_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS sesiones_estudio (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    topic_id        INTEGER REFERENCES topics(id) ON DELETE SET NULL,
+    tipo            TEXT NOT NULL,        -- "chat" | "flashcards" | "notas"
+    duracion_seg    INTEGER DEFAULT 0,
+    cards_revisadas INTEGER DEFAULT 0,
+    cards_correctas INTEGER DEFAULT 0,
+    iniciada_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Índices para búsquedas frecuentes
+CREATE INDEX IF NOT EXISTS idx_notas_topic ON notas(topic_id);
+CREATE INDEX IF NOT EXISTS idx_flashcards_repaso ON flashcards(proximo_repaso);
+CREATE INDEX IF NOT EXISTS idx_flashcards_topic ON flashcards(topic_id);
+```
+
+---
+
+## API — endpoints por router
+
+### `/ai` — Chat con IA
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| POST | `/ai/chat/nueva-sesion` | Genera un `session_id` UUID |
+| POST | `/ai/chat` | Chat sin streaming |
+| POST | `/ai/chat/stream` | Chat con streaming (SSE) — **preferido** |
+| DELETE | `/ai/chat/{session_id}` | Limpia historial de la sesión |
+| GET | `/ai/chat/{session_id}/historial` | Ver historial (debug) |
+
+**Body de `/ai/chat` y `/ai/chat/stream`:**
+```json
+{
+  "session_id": "uuid-aqui",
+  "message": "¿Cuándo procede la tutela?",
+  "topic_id": 1
+}
+```
+
+### `/topics` — Temas/materias
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/topics` | Listar todos |
+| POST | `/topics` | Crear topic |
+| PUT | `/topics/{id}` | Editar |
+| DELETE | `/topics/{id}` | Eliminar |
+
+### `/notas` — Notas de estudio
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/notas` | Listar (filtros: `topic_id`, `tags`, `q` para búsqueda) |
+| GET | `/notas/{id}` | Ver nota individual |
+| POST | `/notas` | Crear nota |
+| PUT | `/notas/{id}` | Editar nota |
+| DELETE | `/notas/{id}` | Eliminar nota |
+
+### `/flashcards` — Sistema de repaso
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/flashcards/pendientes` | Cards para repasar hoy |
+| GET | `/flashcards` | Listar todas (filtro: `topic_id`) |
+| POST | `/flashcards` | Crear card |
+| POST | `/flashcards/{id}/respuesta` | Registrar respuesta (aplica SM-2) |
+| PUT | `/flashcards/{id}` | Editar card |
+| DELETE | `/flashcards/{id}` | Eliminar card |
+
+**Body de `/flashcards/{id}/respuesta`:**
+```json
+{ "calificacion": 4 }
+```
+Calificaciones SM-2: `0`=no supe nada, `1`=muy difícil, `2`=difícil, `3`=bien, `4`=fácil, `5`=perfecto
+
+### `/dashboard` — Estadísticas
+
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| GET | `/dashboard/resumen` | Stats generales del día |
+| GET | `/dashboard/racha` | Días consecutivos de estudio |
+| GET | `/dashboard/progreso/{topic_id}` | Progreso por tema |
+
+---
+
+## Servicios clave
+
+### `services/llm_client.py` — Abstracción de IA
+
+Único punto de contacto con el modelo de IA. El resto del código **nunca importa `anthropic` u `ollama` directamente**.
+
+```python
+# Interfaz pública del módulo:
+def preguntar(system_prompt: str, mensajes: list[dict]) -> str
+def preguntar_stream(system_prompt: str, mensajes: list[dict]) -> Generator[str, None, None]
+```
+
+El proveedor se controla con `LLM_PROVEEDOR` en `.env`. Cambiar de Ollama a Claude no requiere tocar ningún router.
+
+### `services/context_builder.py` — Contexto para el chat
+
+Busca notas relevantes en SQLite y construye el system prompt.
+
+```python
+# Interfaz pública:
+def buscar_notas(mensaje: str, topic_id: int | None, limite: int = 4) -> tuple[str, int]
+def construir_system_prompt(contexto: str) -> str
+```
+
+La búsqueda usa `LIKE` sobre título, contenido y tags. Es suficiente para uso personal — no implementar embeddings ni búsqueda semántica todavía.
+
+### `services/srs_engine.py` — Algoritmo SM-2
+
+```python
+# Interfaz pública:
+def calcular_siguiente_repaso(
+    calificacion: int,         # 0-5
+    intervalo_actual: int,     # días
+    repeticiones: int,
+    factor_facilidad: float
+) -> tuple[int, int, float]    # (nuevo_intervalo, nuevas_repeticiones, nuevo_ef)
+```
+
+Implementación pura del algoritmo SM-2 de Anki. Sin efectos secundarios — solo calcula, el router persiste.
+
+---
+
+## Decisiones de arquitectura
+
+**Por qué historial en memoria y no en SQLite:**  
+El historial de conversación es efímero — solo importa dentro de una sesión activa. Guardar cada mensaje en DB agrega complejidad sin beneficio real para un usuario personal. Si el servidor se reinicia, el usuario abre una sesión nueva. Aceptable.
+
+**Por qué `MAX_HISTORIAL = 10` (5 turnos):**  
+Evita que el contexto acumulado aumente el costo de tokens y la latencia. Para sesiones largas, el usuario puede limpiar la sesión con DELETE.
+
+**Por qué SQLite y no PostgreSQL:**  
+Un usuario, acceso local, datos de estudio personal. SQLite es más que suficiente y elimina un proceso externo del servidor.
+
+**Por qué Vanilla JS y no React:**  
+El frontend se sirve como archivos estáticos desde FastAPI. Sin build step, sin node_modules, editable directamente desde el iPad. El proyecto no justifica la complejidad de un framework.
+
+**Por qué Ollama por defecto:**  
+Durante desarrollo se hacen decenas de llamadas de prueba. Usar la API de Claude cobraría por cada test. Ollama es idéntico en la interfaz pero gratis. El switch a Claude es una línea en `.env`.
+
+**Por qué `qwen2.5-coder:14b` como modelo local:**  
+Hardware disponible: GTX 1080 Ti con 11 GB VRAM. El modelo usa ~8.2 GB en Q4, cabe sin problema y corre íntegramente en GPU (~20-30 tok/seg). Se eligió la variante coder porque la prioridad actual es construir el propio agente en Python. Si el foco cambia a derecho colombiano, cambiar a `qwen2.5:14b` (mismo tamaño, mejor español general) es una línea en `.env` sin tocar código.
+
+---
+
+## Cómo correr el proyecto
+
+```bash
+# 1. Instalar dependencias
+pip install fastapi uvicorn anthropic ollama python-dotenv
+
+# 2. Configurar entorno
+cp .env.example .env
+# editar .env con tus valores
+
+# 3. Inicializar la base de datos
+python -c "from database.connection import init_db; init_db()"
+
+# 4. Levantar el servidor
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# Acceso desde iPad (Tailscale)
+# http://<ip-tailscale-del-servidor>:8000
+```
+
+---
+
+## Estado del proyecto
+
+### Completado ✅
+- [x] Arquitectura definida
+- [x] `ai_router.py` — Chat con contexto, historial y streaming
+- [x] `llm_client.py` — Abstracción Ollama/Claude
+- [x] Schema de base de datos
+
+### En construcción 🔧
+- [ ] `database/connection.py` — conexión SQLite y `init_db()`
+- [ ] `context_builder.py` — búsqueda de notas y construcción de prompt
+- [ ] `srs_engine.py` — algoritmo SM-2
+- [ ] `notas_router.py` — CRUD de notas
+- [ ] `flashcards_router.py` — CRUD + lógica de repaso
+- [ ] `topics_router.py` — CRUD de temas
+- [ ] `dashboard_router.py` — estadísticas
+- [ ] `main.py` — registro de todos los routers
+- [ ] Frontend completo (4 módulos)
+
+### Pendiente 📋
+- [ ] Servir frontend como archivos estáticos desde FastAPI
+- [ ] Instalación y configuración de Ollama en el servidor
+- [ ] Datos de prueba (topics y notas iniciales de derecho y Python)
+
+---
+
+## Convenciones de código
+
+- **Python:** snake_case, type hints en todas las funciones, docstrings solo si la función no es obvia
+- **SQL:** keywords en MAYÚSCULAS, aliases descriptivos en minúsculas
+- **Commits:** en español, descriptivos (`agrega endpoint de flashcards`, `corrige cálculo SM-2`)
+- **Errores:** usar `HTTPException` de FastAPI, nunca `print()` para logs en producción
+- **No ORM:** queries SQL directas con `sqlite3`, así el código es legible sin conocer SQLAlchemy
